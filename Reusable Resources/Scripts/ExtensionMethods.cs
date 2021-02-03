@@ -83,17 +83,19 @@ namespace Utility.Development
         }
         #endregion
 
-        #region Get2DRotationAngleTo
-        public static float Get2DRotationAngleTo(this Vector2 currentPosition, Vector2 targetPosition)
+        #region GetAngleTo
+        public static float GetAngleTo(this Vector2 currentPosition, Vector2 targetPosition)
         {
             Vector2 dir = (targetPosition - currentPosition).normalized;
             return Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         }
 
-        public static float Get2DRotationAngleTo(this Vector3 currentPosition, Vector2 targetPosition)
-        {
-            return Get2DRotationAngleTo((Vector2)currentPosition,targetPosition);
-        }
+        public static float GetAngleTo(this Vector3 currentPosition, Vector2 targetPosition) => GetAngleTo((Vector2)currentPosition, targetPosition);
+        #endregion
+
+        #region GetAngle
+        public static float GetAngle(this Vector2 direction) => Mathf.Atan2(direction.normalized.y, direction.normalized.x) * Mathf.Rad2Deg;
+        public static float GetAngle(this Vector3 direction) => GetAngle((Vector2)direction);
         #endregion
 
         #region DirectionTo
@@ -142,7 +144,7 @@ namespace Utility.Development
 
         #region Shuffle
         //Instead of using IEnumerable<T> here, T[] and List<T> are implemented separately in order to avoid the usage of System.Linq.
-        public static void Shuffle<T>(this T[] array,int shuffleCount = 10)
+        public static void Shuffle<T>(this T[] array, int shuffleCount = 10)
         {
             for (int i = 0; i < shuffleCount; i++)
             {
