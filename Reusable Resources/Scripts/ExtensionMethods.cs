@@ -83,30 +83,16 @@ namespace Utility.Development
         }
         #endregion
 
-        #region Inverse
-        public static Color Inverse(this Color color, bool inverseAlpha = false)
-        {
-            return new Color()
-            {
-                r = 1 - color.r,
-                b = 1 - color.b,
-                g = 1 - color.g,
-                a = inverseAlpha ? 1 - color.a : color.a
-            };
-        }
-        #endregion
-
         #region Get2DRotationAngleTo
         public static float Get2DRotationAngleTo(this Vector2 currentPosition, Vector2 targetPosition)
         {
-            Vector2 dir = targetPosition - currentPosition;
-            return (Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
+            Vector2 dir = (targetPosition - currentPosition).normalized;
+            return Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         }
 
         public static float Get2DRotationAngleTo(this Vector3 currentPosition, Vector2 targetPosition)
         {
-            Vector2 dir = targetPosition - (Vector2)currentPosition;
-            return (Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
+            return Get2DRotationAngleTo((Vector2)currentPosition,targetPosition);
         }
         #endregion
 
@@ -156,7 +142,7 @@ namespace Utility.Development
 
         #region Shuffle
         //Instead of using IEnumerable<T> here, T[] and List<T> are implemented separately in order to avoid the usage of System.Linq.
-        public static void Shuffle<T>(this T[] array, int shuffleCount = 10)
+        public static void Shuffle<T>(this T[] array,int shuffleCount = 10)
         {
             for (int i = 0; i < shuffleCount; i++)
             {
@@ -241,4 +227,14 @@ namespace Utility.Development
         }
         #endregion
     }
+
+    #region EmptyArrayException
+    public class EmptyArrayException : System.Exception
+    {
+        public EmptyArrayException() : base("Array did not contain any elements.")
+        {
+
+        }
+    }
+    #endregion
 }

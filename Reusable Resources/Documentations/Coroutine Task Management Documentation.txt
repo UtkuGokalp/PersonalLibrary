@@ -9,7 +9,7 @@
 /// 1. The existing coroutine API provides no means of stopping specific
 ///    coroutines; StopCoroutine only takes a string argument, and it stops
 ///    all coroutines started with that same string; there is no way to stop
-///    coroutines which were started directly from an enumerator.  This is
+///    coroutines which were started directly from an enumerator. This is
 ///    not robust enough and is also probably pretty inefficient.
 ///
 /// 2. StartCoroutine and friends are MonoBehaviour methods.  This means
@@ -24,7 +24,7 @@
 /// IEnumerator MyAwesomeTask()
 /// {
 ///     while(true) {
-///         Debug.Log("Logcat iz in ur consolez, spammin u wif messagez.");
+///         Debug.Log("Log is in your console, spamming a few messages.");
 ///         yield return null;
 ////    }
 /// }
