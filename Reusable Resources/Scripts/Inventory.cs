@@ -206,7 +206,7 @@ namespace Utility.Inventory
         /// <summary>
         /// Returns the total amount of items this inventory can hold (i.e. number of slots).
         /// </summary>
-        public int GetTotalInventoryLength => inventory.Length;
+        public int GetTotalInventoryLength() => inventory.Length;
         #endregion
 
         #region GetFirstAvailableSlotIndex
