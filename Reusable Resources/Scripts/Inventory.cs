@@ -7,9 +7,6 @@ namespace Utility.Inventory
     public class Inventory<TItemBase> : IEnumerable<TItemBase>
     {
         #region Variables
-#if UNITY_EDITOR
-        [UnityEngine.SerializeField] //Debug attribute
-#endif
         private readonly List<TItemBase>[] inventory;
         private readonly IEqualityComparer<TItemBase> itemEqualityComparer;
         public event TypeSafeEventHandler<Inventory<TItemBase>, OnItemAddedEventArgs> OnItemAdded;
