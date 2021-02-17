@@ -105,7 +105,7 @@ namespace Utility.Development
 
         #region CheckSquaredDistance
         /// <summary>
-        /// Checks distance without using square root so that it is more performant. == operator isn't supported, passing false to both parameters results in a bigger check.
+        /// Checks distance without using square root so that it is more performant. == operator isn't supported.
         /// </summary>
         /// <param name="position">Position to check from.</param>
         /// <param name="checkPosition">Position to check against.</param>
@@ -123,13 +123,13 @@ namespace Utility.Development
             {
                 return distanceBetweenObjectsSquared <= distance * distance;
             }
-            else if (!smallerCheck && equalityCheck) //>=
-            {
-                return distanceBetweenObjectsSquared >= distance * distance;
-            }
-            else //>
+            else if (!smallerCheck && !equalityCheck) //>
             {
                 return distanceBetweenObjectsSquared > distance * distance;
+            }
+            else //>=
+            {
+                return distanceBetweenObjectsSquared >= distance * distance;
             }
         }
         #endregion
