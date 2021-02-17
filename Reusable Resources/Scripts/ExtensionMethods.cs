@@ -103,6 +103,37 @@ namespace Utility.Development
         public static Vector3 DirectionTo(this Vector3 from, Vector3 to, bool normalized = true) => normalized ? (to - from).normalized : (to - from);
         #endregion
 
+        #region CheckSquaredDistance
+        /// <summary>
+        /// Checks distance without using square root so that it is more performant. == operator isn't supported, passing false to both parameters results in a bigger or equal check.
+        /// </summary>
+        /// <param name="position">Position to check from.</param>
+        /// <param name="checkPosition">Position to check against.</param>
+        /// <param name="distance">Target distance.</param>
+        /// <param name="smallerCheck">If true, comparasion will be made using smaller than operator. Otherwise bigger than operator will be used.</param>
+        /// <param name="equalityCheck">If true, equality check will also be made.</param>
+        public static bool CheckSquaredDistance(this Vector3 position, Vector3 checkPosition, float distance, bool smallerCheck, bool equalityCheck)
+        {
+            float distanceBetweenObjectsSquared = position.DirectionTo(checkPosition, false).sqrMagnitude;
+            if (smallerCheck && !equalityCheck) //<
+            {
+                return distanceBetweenObjectsSquared < distance * distance;
+            }
+            else if (smallerCheck && equalityCheck) //<=
+            {
+                return distanceBetweenObjectsSquared <= distance * distance;
+            }
+            else if (!smallerCheck && !equalityCheck) //>
+            {
+                return distanceBetweenObjectsSquared > distance * distance;
+            }
+            else //>=
+            {
+                return distanceBetweenObjectsSquared >= distance * distance;
+            }
+        }
+        #endregion
+
         #region IsObjectVisible
         public static bool IsObjectVisible(this Camera camera, Vector2 objectPosition, Vector2 boundaryOffset)
         {
