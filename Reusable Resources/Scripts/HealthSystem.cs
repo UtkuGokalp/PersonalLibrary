@@ -17,6 +17,7 @@ namespace Utility.Health
         public bool Invincible { get; set; }
         public bool IsAlive { get; private set; }
         public bool HasFullHealth => Health == MaxHealth;
+        public float HealthPercent => (float)health / maxHealth;
         public event TypeSafeEventHandler<HealthSystem, System.EventArgs> OnDeath;
         public event TypeSafeEventHandler<HealthSystem, OnHealthChangedEventArgs> OnHealthChanged;
         #endregion
