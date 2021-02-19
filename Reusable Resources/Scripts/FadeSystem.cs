@@ -70,7 +70,7 @@ namespace Utility.Development
                 RectTransform fadeImageRectTransform = fadeImageObject.GetComponent<RectTransform>();
                 fadeImageRectTransform.anchorMin = Vector2.zero;
                 fadeImageRectTransform.anchorMax = Vector2.one;
-                fadeImageRectTransform.pivot = Vector2.one / 2;
+                fadeImageRectTransform.pivot = Vector2.one * 0.5f;
                 fadeImageRectTransform.anchoredPosition = Vector2.zero;
                 fadeImageObject.SetActive(false);
                 Image fadeObjectImageComponent = fadeImageObject.GetComponent<Image>();
