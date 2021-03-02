@@ -5,16 +5,16 @@ namespace Utility.Development
 {
     public static class Data
     {
-    	#region Variables
-    	private readonly static BinaryFormatter binaryFormatter;
-    	#endregion
+		#region Variables
+		private readonly static BinaryFormatter binaryFormatter;
+		#endregion
 
-    	#region Constructor
-    	static Data()
-    	{
-    		binaryFormatter = new BinaryFormatter();
-    	}
-    	#endregion
+		#region Constructor
+		static Data()
+		{
+			binaryFormatter = new BinaryFormatter();
+		}
+		#endregion
 
         #region Save
         /// <summary>
@@ -27,10 +27,8 @@ namespace Utility.Development
                 File.Create(path).Dispose();
             }
 
-            using (FileStream stream = File.Open(path, overwrite ? FileMode.Open : FileMode.Append))
-            {
-                binaryFormatter.Serialize(stream, data);
-            }
+            using FileStream stream = File.Open(path, overwrite ? FileMode.Open : FileMode.Append);
+            binaryFormatter.Serialize(stream, data);
         }
         #endregion
 
@@ -46,10 +44,10 @@ namespace Utility.Development
             }
 
             T data;
-            using (FileStream stream = new FileStream(path, FileMode.Open))
-            {
-                data = (T)binaryFormatter.Deserialize(stream);
-            }
+            
+            using FileStream stream = new FileStream(path, FileMode.Open);
+            data = (T)binaryFormatter.Deserialize(stream);
+
             return data;
         }
         #endregion
