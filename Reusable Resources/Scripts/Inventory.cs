@@ -236,7 +236,14 @@ namespace Utility.Inventory
         {
             for (int i = 0; i < inventory.Length; i++)
             {
-                yield return inventory[i][0];
+                if (inventory[i].Count > 0)
+                {
+                    yield return inventory[i][0];
+                }
+                else
+                {
+                    yield return default;
+                }
             }
         }
         #endregion
