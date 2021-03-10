@@ -146,11 +146,11 @@ namespace Utility.Inventory
         }
         #endregion
 
-        #region GetTotalItemCount
+        #region GetCountOfSlotsContainingItems
         /// <summary>
-        /// Returns the number of total items this inventory has.
+        /// Returns the number of total slots that has at least one item in it.
         /// </summary>
-        public int GetTotalItemCount()
+        public int GetCountOfSlotsContainingItems()
         {
             int totalItemCount = 0;
             for (int i = 0; i < inventory.Length; i++)
