@@ -110,7 +110,7 @@ namespace Utility.Development
         /// <param name="position">Position to check from.</param>
         /// <param name="checkPosition">Position to check against.</param>
         /// <param name="distance">Target distance.</param>
-        /// <param name="smallerCheck">If true, comparasion will be made using smaller than operator. Otherwise bigger than operator will be used.</param>
+        /// <param name="smallerCheck">If true, comparison will be made using smaller than operator. Otherwise bigger than operator will be used.</param>
         /// <param name="equalityCheck">If true, equality check will also be made.</param>
         public static bool CheckSquaredDistance(this Vector3 position, Vector3 checkPosition, float distance, bool smallerCheck, bool equalityCheck)
         {
@@ -132,6 +132,16 @@ namespace Utility.Development
                 return distanceBetweenObjectsSquared >= distance * distance;
             }
         }
+
+        /// <summary>
+        /// Checks distance without using square root so that it is more performant. == operator isn't supported.
+        /// </summary>
+        /// <param name="position">Position to check from.</param>
+        /// <param name="checkPosition">Position to check against.</param>
+        /// <param name="distance">Target distance.</param>
+        /// <param name="smallerCheck">If true, comparison will be made using smaller than operator. Otherwise bigger than operator will be used.</param>
+        /// <param name="equalityCheck">If true, equality check will also be made.</param>
+        public static bool CheckSquaredDistance(this Vector2 position, Vector2 checkPosition, float distance, bool smallerCheck, bool equalityCheck) => CheckSquaredDistance((Vector3)position, (Vector3)checkPosition, distance, smallerCheck, equalityCheck);
         #endregion
 
         #region IsObjectVisible
