@@ -83,6 +83,10 @@ namespace Utility.Development
         }
         #endregion
 
+        #region AddToEulerAngles
+        public static Quaternion AddToEulerAngles(this Quaternion rotation, float x, float y, float z) => rotation.ChangeEulerAngles(rotation.eulerAngles.x + x, rotation.eulerAngles.y + y, rotation.eulerAngles.z + z);
+        #endregion
+
         #region GetAngleTo
         public static float GetAngleTo(this Vector2 currentPosition, Vector2 targetPosition)
         {
