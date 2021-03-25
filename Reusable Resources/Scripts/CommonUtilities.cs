@@ -20,7 +20,8 @@ namespace Utility.Development
 
         private GameObject player;
         private Transform playerTransform;
-
+        private Camera mainCamera;
+        
         public GameObject Player
         {
             get
@@ -59,7 +60,21 @@ namespace Utility.Development
             get => PlayerTransform.rotation;
             set => PlayerTransform.rotation = value;
         }
-        
+
+        public Camera MainCamera
+        {
+            get
+            {
+                if (mainCamera == null)
+                {
+                    mainCamera = Camera.main;
+                }
+
+                return mainCamera;
+            }
+        }
+
+
         public const string PLAYER_TAG = "Player";
         public const string PLAYER_LAYER = "Player";
         
