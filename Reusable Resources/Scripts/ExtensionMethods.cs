@@ -61,6 +61,11 @@ namespace Utility.Development
         }
         #endregion
 
+        #region Add
+        public static Vector2 Add(this Vector2 vector2, float x, float y) => vector2.With(vector2.x + x, vector2.y + y);
+        public static Vector3 Add(this Vector3 vector3, float x, float y, float z) => vector3.With(vector3.x + x, vector3.y + y, vector3.z + z);
+        #endregion
+
         #region ChangeEulerAngles
         public static Quaternion ChangeEulerAngles(this Quaternion rotation, float? x, float? y, float? z)
         {
