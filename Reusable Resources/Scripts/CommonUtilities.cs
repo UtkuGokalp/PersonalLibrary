@@ -73,11 +73,15 @@ namespace Utility.Development
                 return mainCamera;
             }
         }
-
-
+        
         public const string PLAYER_TAG = "Player";
         public const string PLAYER_LAYER = "Player";
-        
+
+        public Vector2 GetMousePosition2D()
+        {
+            return MainCamera.ScreenToWorldPoint(Input.mousePosition);
+        }
+
         private CommonUtilities()
         {
         }
