@@ -13,8 +13,8 @@ namespace Utility.FPS
         public event TypeSafeEventHandler<FPSAimController, OnAimLostEventArgs> OnAimIsLost;
         #endregion
 
-        #region FixedUpdate
-        private void FixedUpdate()
+        #region Update
+        private void Update()
         {
             Ray ray = Camera.main.ViewportPointToRay(Vector2.one * 0.5f);
             bool hit = Physics.Raycast(ray, out RaycastHit hitInfo, Mathf.Infinity, aimLayer, QueryTriggerInteraction.Ignore);
@@ -26,19 +26,10 @@ namespace Utility.FPS
                     aimedTransform = hitInfo.transform;
                     OnAimed?.Invoke(this, new OnAimedEventArgs(hitInfo));
                 }
-                else
-                {
-                    if (aimedTransform != hitInfo.transform)
-                    {
-                        OnAimIsLost?.Invoke(this, new OnAimLostEventArgs(aimedTransform));
-                        aimedTransform = hitInfo.transform;
-                        OnAimed?.Invoke(this, new OnAimedEventArgs(hitInfo));
-                    }
-                }
             }
             else
             {
-                if (aimedTransform != null)
+                if (!(aimedTransform is null))
                 {
                     OnAimIsLost?.Invoke(this, new OnAimLostEventArgs(aimedTransform));
                     aimedTransform = null;
