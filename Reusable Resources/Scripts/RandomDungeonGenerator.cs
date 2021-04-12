@@ -23,6 +23,9 @@ namespace Utility.Development
         public int[,] GetRoomMatrix()
         {
             int[,] roomMatrix = new int[width, height];
+            //C# native number generator is used here because this method might need to be multithreaded
+            //which UnityEngine.Random.Range() does not support.
+            System.Random randomNumberGenerator = new System.Random();
 
             if (totalRoomCount == width * height) //If we want all of the rooms to be filled
             {
@@ -51,6 +54,16 @@ namespace Utility.Development
                     oldOutestRoomIndices = outestRoomIndices.ToArray();
                     outestRoomIndices.Clear();
 
+                    //At this point we are stuck forever in this loop. This can happen because the algorithm
+                    //depends on luck (which is not ideal). Calling the method again here and returning the value
+                    //is going to cost memory but it is going to make this method functional provided that we have enough memory.
+                    //Note: this method doesn't get stuck often, just from time to time + it doesn't use huge amounts of memory
+                    //so this solution can be seen as valid.
+                    if (oldOutestRoomIndices.Length == 0)
+                    {
+                        return GetRoomMatrix();
+                    }
+
                     for (int i = 0; i < oldOutestRoomIndices.Length; i++)
                     {
                         Vector2Int[] neighbours = GetAvailableNeighbours
@@ -69,7 +82,7 @@ namespace Utility.Development
                             {
                                 SetCurrentRoomInRoomMatrix();
                             }
-                            else if (Random.Range(0, 2) == 1)
+                            else if (randomNumberGenerator.Next(0, 2) == 1)
                             {
                                 SetCurrentRoomInRoomMatrix();
                             }
