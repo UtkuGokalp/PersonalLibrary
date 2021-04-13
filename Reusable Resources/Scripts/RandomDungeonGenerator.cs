@@ -1,22 +1,46 @@
+using System;
 using UnityEngine;
 using System.Collections.Generic;
 
 namespace Utility.Development
 {
-    public class RandomDungeonGenerator : MonoBehaviour
+    public class RandomDungeonGenerator
     {
         #region Variables
-        [SerializeField]
         private int width;
-        [SerializeField]
         private int height;
-        [SerializeField]
         private int totalRoomCount;
         #endregion
 
         #region Constants
         public const int NO_ROOM = 0;
         public const int HAS_ROOM = 1;
+        #endregion
+
+        #region Constructor
+        public RandomDungeonGenerator(int width, int height, int totalRoomCount)
+        {
+            if (width < 1)
+            {
+                throw new ArgumentException("Width cannot be less than 1.");
+            }
+            if (height < 1)
+            {
+                throw new ArgumentException("Height cannot be less than 1.");
+            }
+            if (totalRoomCount < 1)
+            {
+                throw new ArgumentException("Total room count cannot be less than 1.");
+            }
+            if (totalRoomCount > width * height)
+            {
+                throw new ArgumentException($"Maximum total room count is width x height ({width * height}).");
+            }
+
+            this.width = width;
+            this.height = height;
+            this.totalRoomCount = totalRoomCount;
+        }
         #endregion
 
         #region GetRoomMatrix
@@ -57,8 +81,9 @@ namespace Utility.Development
                     //At this point we are stuck forever in this loop. This can happen because the algorithm
                     //depends on luck (which is not ideal). Calling the method again here and returning the value
                     //is going to cost memory but it is going to make this method functional provided that we have enough memory.
-                    //Note: this method doesn't get stuck often, just from time to time + it doesn't use huge amounts of memory
-                    //so this solution can be seen as valid.
+                    //Note: this method doesn't get stuck often, just from time to time so this solution can be seen as valid.
+                    //Just from time to time: The algorithm showed that this line of code is executed rarely during the tests,
+                    //even when this is most likely to be executed (which is totalRoomCount == width * height - (a small number))
                     if (oldOutestRoomIndices.Length == 0)
                     {
                         return GetRoomMatrix();
@@ -66,32 +91,39 @@ namespace Utility.Development
 
                     for (int i = 0; i < oldOutestRoomIndices.Length; i++)
                     {
+                        if (generatedRoomCount == totalRoomCount)
+                        {
+                            break;
+                        }
+
                         Vector2Int[] neighbours = GetAvailableNeighbours
                                                  (oldOutestRoomIndices[i].x,
                                                   oldOutestRoomIndices[i].y,
                                                   roomMatrix);
+                        if (neighbours.Length == 0)
+                        {
+                            //If there are no neighbours we cannot create a new room anyways,
+                            //just check out the next rooms.
+                            continue;
+                        }
 
-                        foreach (Vector2Int neighbour in neighbours)
+                        neighbours.Shuffle();
+                        int selectedNeighbourCount = randomNumberGenerator.Next(0, neighbours.Length) + 1;
+
+                        for (int j = 0; j < selectedNeighbourCount; j++)
                         {
                             if (generatedRoomCount == totalRoomCount)
                             {
                                 break;
                             }
-                            //Guarrantee that at least one outest room index will be stored.
-                            if (outestRoomIndices.Count == 0)
+                            else
                             {
-                                SetCurrentRoomInRoomMatrix();
-                            }
-                            else if (randomNumberGenerator.Next(0, 2) == 1)
-                            {
-                                SetCurrentRoomInRoomMatrix();
-                            }
-
-                            void SetCurrentRoomInRoomMatrix()
-                            {
-                                roomMatrix[neighbour.x, neighbour.y] = HAS_ROOM;
-                                generatedRoomCount++;
-                                outestRoomIndices.Add(neighbour);
+                                if (neighbours.Length != 0)
+                                {
+                                    roomMatrix[neighbours[j].x, neighbours[j].y] = HAS_ROOM;
+                                    generatedRoomCount++;
+                                    outestRoomIndices.Add(neighbours[j]);
+                                }
                             }
                         }
                     }
@@ -146,29 +178,6 @@ namespace Utility.Development
 
             int GetRoomsRowCount() => roomMatrix.GetLength(0);
             int GetRoomsColumnCount() => roomMatrix.GetLength(1);
-        }
-        #endregion
-
-        #region OnValidate
-        private void OnValidate()
-        {
-            if (width < 1)
-            {
-                width = 1;
-            }
-            if (height < 1)
-            {
-                height = 1;
-            }
-            if (totalRoomCount < 1)
-            {
-                totalRoomCount = 1;
-            }
-            if (totalRoomCount > width * height)
-            {
-                totalRoomCount = width * height;
-                Debug.LogWarning($"Maximum total room count is width x height ({width * height}).");
-            }
         }
         #endregion
     }
