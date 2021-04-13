@@ -196,6 +196,10 @@ namespace Utility.Development
         //Instead of using IEnumerable<T> here, T[] and List<T> are implemented separately in order to avoid the usage of System.Linq.
         public static void Shuffle<T>(this T[] array, int shuffleCount = 10)
         {
+            if (array.Length == 0)
+            {
+                return;
+            }
             for (int i = 0; i < shuffleCount; i++)
             {
                 int firstIndex = Random.Range(0, array.Length);
@@ -208,6 +212,10 @@ namespace Utility.Development
 
         public static void Shuffle<T>(this List<T> list, int shuffleCount = 10)
         {
+            if (list.Count == 0)
+            {
+                return;
+            }
             for (int i = 0; i < shuffleCount; i++)
             {
                 int firstIndex = Random.Range(0, list.Count);
