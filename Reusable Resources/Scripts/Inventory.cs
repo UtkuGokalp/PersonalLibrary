@@ -124,6 +124,23 @@ namespace Utility.Inventory
         public TItemBase GetItem(int index) => this[index];
         #endregion
 
+        #region GetItemIndex
+        /// <summary>
+        /// Returns the index of the given item if the item exists within inventory. Returns null otherwise.
+        /// </summary>
+        public int? GetItemIndex(TItemBase item)
+        {
+            for (int i = 0; i < inventory.Length; i++)
+            {
+                if (itemEqualityComparer.Equals(inventory[i][0], item))
+                {
+                    return i;
+                }
+            }
+            return null;
+        }
+        #endregion
+
         #region GetItemCount
         /// <summary>
         /// Returns the count of the given item.
