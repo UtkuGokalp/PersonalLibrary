@@ -117,6 +117,13 @@ namespace Utility.Inventory
         }
         #endregion
 
+        #region GetItem
+        /// <summary>
+        /// Returns the item at the given index.
+        /// </summary>
+        public TItemBase GetItem(int index) => this[index];
+        #endregion
+
         #region GetItemCount
         /// <summary>
         /// Returns the count of the given item.
