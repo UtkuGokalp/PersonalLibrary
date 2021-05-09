@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using CinemachineTest.Player.Movement;
 
 namespace Utility.Development
 {
@@ -73,13 +74,23 @@ namespace Utility.Development
                 return mainCamera;
             }
         }
-        
+
         public const string PLAYER_TAG = "Player";
         public const string PLAYER_LAYER_NAME = "Player";
 
         public Vector2 GetMousePosition2D()
         {
             return MainCamera.ScreenToWorldPoint(Input.mousePosition);
+        }
+
+        /// <summary>
+        /// Returns the amount of movement an object should move with in order to reach it's target properly no matter the frame rate. The returned value is generally used by multiplying it with a normalized movement vector.
+        /// </summary>
+        public static float GetFrameRateIndependantMoveAmount(float speed, float distanceLeftToTarget, float deltaTime)
+        {
+            float moveAmount = speed * deltaTime;
+            moveAmount = Mathf.Clamp(moveAmount, 0, distanceLeftToTarget);
+            return moveAmount;
         }
 
         private CommonUtilities()
