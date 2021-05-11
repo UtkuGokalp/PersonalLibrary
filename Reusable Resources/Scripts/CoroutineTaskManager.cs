@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿#nullable enable
+
+using UnityEngine;
 using System.Collections;
 
 namespace Utility.CoroutineHelper
@@ -16,7 +18,7 @@ namespace Utility.CoroutineHelper
 			public bool Paused { get; private set; }
 
 			public delegate void FinishedHandler(bool manual);
-			public event FinishedHandler Finished;
+			public event FinishedHandler? Finished;
 			#endregion
 
 			#region Constructor
@@ -44,7 +46,10 @@ namespace Utility.CoroutineHelper
 			public void Start()
 			{
 				Running = true;
-				singleton.StartCoroutine(CallWrapper());
+				if (singleton != null)
+				{
+					singleton.StartCoroutine(CallWrapper());
+				}
 			}
 			#endregion
 
@@ -85,7 +90,7 @@ namespace Utility.CoroutineHelper
 		#endregion
 
 		#region Variables
-		private static CoroutineTaskManager singleton;
+		private static CoroutineTaskManager? singleton;
 		#endregion
 
 		#region CreateTask

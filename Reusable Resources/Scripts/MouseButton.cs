@@ -1,4 +1,6 @@
-﻿namespace Utility.Development
+﻿#nullable enable
+
+namespace Utility.Development
 {
     public static class MouseButton
     {

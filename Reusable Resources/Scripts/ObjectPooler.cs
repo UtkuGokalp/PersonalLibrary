@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿#nullable enable
+
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -11,7 +13,7 @@ namespace Utility.Development
         private Queue<T> pool;
         private List<T> objects;
         public bool HasObjects => pool.Count != 0;
-        private MonoBehaviourHelper mbHelper;
+        private MonoBehaviourHelper? mbHelper;
         private MonoBehaviourHelper MB_Helper
         {
             get

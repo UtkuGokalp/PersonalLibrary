@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿#nullable enable
+
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -228,7 +230,7 @@ namespace Utility.Development
         #endregion
 
         #region FadeIn
-        public static void FadeIn(this AudioSource audioSource, float fadeTime, float lastVolume = 1, System.Action afterFadingFinished = null)
+        public static void FadeIn(this AudioSource audioSource, float fadeTime, float lastVolume = 1, System.Action? afterFadingFinished = null)
         {
             MonoBehaviourHelper helper = MonoBehaviourHelper.CreateTemporaryMonoBehaviour(null);
             helper.StartCoroutine(FadeInCoroutine(audioSource, fadeTime, lastVolume, afterFadingFinished, helper));
@@ -236,7 +238,7 @@ namespace Utility.Development
         #endregion
 
         #region FadeOut
-        public static void FadeOut(this AudioSource audioSource, float fadeTime, System.Action afterFadingFinished = null)
+        public static void FadeOut(this AudioSource audioSource, float fadeTime, System.Action? afterFadingFinished = null)
         {
             MonoBehaviourHelper helper = MonoBehaviourHelper.CreateTemporaryMonoBehaviour(null);
             helper.StartCoroutine(FadeOutCoroutine(audioSource, fadeTime, afterFadingFinished, helper));
@@ -244,7 +246,7 @@ namespace Utility.Development
         #endregion
 
         #region FadeInCoroutine
-        private static IEnumerator FadeInCoroutine(AudioSource audioSource, float fadeTime, float lastVolume, System.Action afterFadingFinished, MonoBehaviourHelper helperToDestroy)
+        private static IEnumerator FadeInCoroutine(AudioSource audioSource, float fadeTime, float lastVolume, System.Action? afterFadingFinished, MonoBehaviourHelper helperToDestroy)
         {
             if (audioSource != null)
             {
@@ -266,7 +268,7 @@ namespace Utility.Development
         #endregion
 
         #region FadeOutCoroutine
-        private static IEnumerator FadeOutCoroutine(AudioSource audioSource, float fadeTime, System.Action afterFadingFinished, MonoBehaviourHelper helperToDestroy)
+        private static IEnumerator FadeOutCoroutine(AudioSource audioSource, float fadeTime, System.Action? afterFadingFinished, MonoBehaviourHelper helperToDestroy)
         {
             if (audioSource != null)
             {

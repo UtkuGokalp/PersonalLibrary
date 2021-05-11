@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿#nullable enable
+
+using UnityEngine;
 
 namespace Utility.Development
 {
@@ -8,7 +10,7 @@ namespace Utility.Development
         /// <summary>
         /// Creates a new MonoBehaviourHelper object and returns it in order for the client to use.
         /// </summary>
-        public static MonoBehaviourHelper CreateTemporaryMonoBehaviour(float? lifeTime, string name = null)
+        public static MonoBehaviourHelper CreateTemporaryMonoBehaviour(float? lifeTime, string? name = null)
         {
             GameObject go = new GameObject(name ?? "Mono Behaviour Helper", typeof(MonoBehaviourHelper));
             MonoBehaviourHelper monoBehaviourHelper = go.GetComponent<MonoBehaviourHelper>();

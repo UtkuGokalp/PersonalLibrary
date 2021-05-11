@@ -1,15 +1,17 @@
-﻿using System.IO;
+﻿#nullable enable
+
+using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Utility.Development
 {
     public static class Data
     {
-		#region Variables
-		private readonly static BinaryFormatter binaryFormatter;
-		#endregion
+        #region Variables
+        private readonly static BinaryFormatter binaryFormatter;
+        #endregion
 
-		#region Constructor
+        #region Constructor
 		static Data()
 		{
 			binaryFormatter = new BinaryFormatter();

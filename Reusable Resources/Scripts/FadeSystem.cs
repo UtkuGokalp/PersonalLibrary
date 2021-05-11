@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿#nullable enable
+
+using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 
@@ -13,13 +15,17 @@ namespace Utility.Development
         private Vector2Int referenceResolution = new Vector2Int(1920, 1080);
         [SerializeField]
         private Color fadeImageColor = Color.black;
+#nullable disable
         private Canvas canvas;
         private Image fadeImage;
+#nullable restore
         private bool Fading => fadeImage.gameObject.activeSelf;
         /// <summary>
         /// Current instance of the FadeSystem. If don't destroy on load is false, returns null.
         /// </summary>
+#nullable disable
         public static FadeSystem Instance { get; private set; }
+#nullable restore
         #endregion
 
         #region Awake
@@ -35,10 +41,6 @@ namespace Utility.Development
                     Instance = this;
                     DontDestroyOnLoad(gameObject);
                     DontDestroyOnLoad(canvas.gameObject);
-                }
-                else
-                {
-                    Instance = null;
                 }
             }
             else

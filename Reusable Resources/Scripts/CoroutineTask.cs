@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿#nullable enable
+
+using System.Collections;
 
 namespace Utility.CoroutineHelper
 {
@@ -19,7 +21,7 @@ namespace Utility.CoroutineHelper
 		public delegate void FinishedHandler(bool manual);
 
 		/// Termination event.  Triggered when the coroutine completes execution.
-		public event FinishedHandler Finished;
+		public event FinishedHandler? Finished;
 		#endregion
 
 		#region Constructor

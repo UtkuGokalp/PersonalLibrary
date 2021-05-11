@@ -1,9 +1,11 @@
-﻿using UnityEngine;
+﻿#nullable enable
+
+using UnityEngine;
 using Utility.Development;
 
 namespace Utility.Health
 {
-	#region HealthSystem
+    #region HealthSystem
     [DisallowMultipleComponent]
     public class HealthSystem : MonoBehaviour
     {
@@ -18,8 +20,8 @@ namespace Utility.Health
         public bool IsAlive { get; private set; }
         public bool HasFullHealth => Health == MaxHealth;
         public float HealthPercent => (float)health / maxHealth;
-        public event TypeSafeEventHandler<HealthSystem, System.EventArgs> OnDeath;
-        public event TypeSafeEventHandler<HealthSystem, OnHealthChangedEventArgs> OnHealthChanged;
+        public event TypeSafeEventHandler<HealthSystem, System.EventArgs>? OnDeath;
+        public event TypeSafeEventHandler<HealthSystem, OnHealthChangedEventArgs>? OnHealthChanged;
         #endregion
 
         #region Awake

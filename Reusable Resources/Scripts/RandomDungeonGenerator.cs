@@ -1,3 +1,5 @@
+#nullable enable
+
 using System;
 using UnityEngine;
 using System.Collections.Generic;
@@ -96,11 +98,11 @@ namespace Utility.Development
                             break;
                         }
 
-                        Vector2Int[] neighbours = GetAvailableNeighbours
+                        Vector2Int[]? neighbours = GetAvailableNeighbours
                                                  (oldOutestRoomIndices[i].x,
                                                   oldOutestRoomIndices[i].y,
                                                   roomMatrix);
-                        if (neighbours.Length == 0)
+                        if (neighbours == null)
                         {
                             //If there are no neighbours we cannot create a new room anyways,
                             //just check out the next rooms.
@@ -108,6 +110,7 @@ namespace Utility.Development
                         }
 
                         neighbours.Shuffle();
+
                         int selectedNeighbourCount = randomNumberGenerator.Next(0, neighbours.Length) + 1;
 
                         for (int j = 0; j < selectedNeighbourCount; j++)
@@ -135,7 +138,7 @@ namespace Utility.Development
         #endregion
 
         #region GetAvailableNeighbours
-        private Vector2Int[] GetAvailableNeighbours(int x, int y, int[,] roomMatrix)
+        private Vector2Int[]? GetAvailableNeighbours(int x, int y, int[,] roomMatrix)
         {
             if (x < 0 || x >= GetRoomsRowCount() ||
                 y < 0 || y >= GetRoomsColumnCount())

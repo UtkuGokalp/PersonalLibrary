@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿#nullable enable
+
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Utility.Development
@@ -9,7 +11,7 @@ namespace Utility.Development
     public class MultipleImageTransitionButton : Button
     {
         #region Variables
-        private Image[] images;
+        private Image[]? images;
         #endregion
 
         #region Awake
@@ -22,16 +24,22 @@ namespace Utility.Development
         #region DoStateTransition
         protected override void DoStateTransition(SelectionState state, bool instant)
         {
-            var targetColor =
-                state == SelectionState.Disabled ? colors.disabledColor :
-                state == SelectionState.Highlighted ? colors.highlightedColor :
-                state == SelectionState.Normal ? colors.normalColor :
-                state == SelectionState.Pressed ? colors.pressedColor :
-                state == SelectionState.Selected ? colors.selectedColor : Color.white;
-            
-            foreach (Graphic graphic in images)
+            Color targetColor = state switch
             {
-                graphic.CrossFadeColor(targetColor, instant ? 0f : colors.fadeDuration, true, true);
+                SelectionState.Disabled => colors.disabledColor,
+                SelectionState.Highlighted => colors.highlightedColor,
+                SelectionState.Normal => colors.normalColor,
+                SelectionState.Pressed => colors.pressedColor,
+                SelectionState.Selected => colors.selectedColor,
+                _ => Color.white
+            };
+
+            if (images != null)
+            {
+                foreach (Graphic graphic in images)
+                {
+                    graphic.CrossFadeColor(targetColor, instant ? 0f : colors.fadeDuration, true, true);
+                }
             }
         }
         #endregion

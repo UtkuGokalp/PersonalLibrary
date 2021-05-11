@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿#nullable enable
+
+using System.Collections;
 using Utility.Development;
 using System.Collections.Generic;
 
@@ -9,8 +11,8 @@ namespace Utility.Inventory
         #region Variables
         private readonly List<TItemBase>[] inventory;
         private readonly IEqualityComparer<TItemBase> itemEqualityComparer;
-        public event TypeSafeEventHandler<Inventory<TItemBase>, OnItemAddedEventArgs> OnItemAdded;
-        public event TypeSafeEventHandler<Inventory<TItemBase>, OnItemRemovedEventArgs> OnItemRemoved;
+        public event TypeSafeEventHandler<Inventory<TItemBase>, OnItemAddedEventArgs>? OnItemAdded;
+        public event TypeSafeEventHandler<Inventory<TItemBase>, OnItemRemovedEventArgs>? OnItemRemoved;
         #endregion
 
         #region Constructor
@@ -57,6 +59,7 @@ namespace Utility.Inventory
         /// </summary>
         public void AddItem(TItemBase item, int amount = 1)
         {
+            int addedItemCount = 0;
         startAddingItems:
             if (ContainsItem(item, out int index, out int _))
             {
@@ -64,17 +67,30 @@ namespace Utility.Inventory
                 {
                     inventory[index].Add(item);
                 }
+                addedItemCount += amount;
             }
             else
             {
-                //Add one item, decrease amount by one and hand over 
-                //the addition logic to the piece of code which is 
+                //Add one item, decrease amount by one and hand over
+                //the addition logic to the piece of code which is
                 //responsible for adding items that are already in the inventory.
-                inventory[(int)GetFirstAvailableSlotIndex()].Add(item);
-                amount--;
+                int? firstAvailableSlotIndex = GetFirstAvailableSlotIndex();
+                if (firstAvailableSlotIndex.HasValue)
+                {
+                    inventory[firstAvailableSlotIndex.Value].Add(item);
+                    addedItemCount++;
+                    amount--;
+                }
+                else
+                {
+                    //If we don't have any slots left, don't bother trying to add any other items.
+                    //Don't invoke OnItemAdded event because we didn't add any items, we didn't have any slots.
+                    goto exitFunctionWithoutInvokingOnItemAddedEvent;
+                }
                 goto startAddingItems;
             }
-            OnItemAdded?.Invoke(this, new OnItemAddedEventArgs(amount, index, item));
+            OnItemAdded?.Invoke(this, new OnItemAddedEventArgs(addedItemCount, index, item));
+        exitFunctionWithoutInvokingOnItemAddedEvent:;
         }
         #endregion
 
@@ -266,7 +282,7 @@ namespace Utility.Inventory
                 }
                 else
                 {
-                    yield return default;
+                    continue;
                 }
             }
         }

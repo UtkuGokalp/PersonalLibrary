@@ -1,11 +1,13 @@
-﻿using UnityEngine;
+﻿#nullable enable
+
+using UnityEngine;
 
 namespace Utility.Development
 {
     public class CommonUtilities
     {
         private static readonly object lockObject = new object();
-        private static CommonUtilities instance;
+        private static CommonUtilities? instance;
 
         public static CommonUtilities Instance
         {
@@ -18,11 +20,11 @@ namespace Utility.Development
             }
         }
 
-        private GameObject player;
-        private Transform playerTransform;
-        private Camera mainCamera;
-        
-        public GameObject Player
+        private GameObject? player;
+        private Transform? playerTransform;
+        private Camera? mainCamera;
+
+        public GameObject? Player
         {
             get
             {
@@ -35,30 +37,66 @@ namespace Utility.Development
             }
         }
 
-        public Transform PlayerTransform
+        public Transform? PlayerTransform
         {
             get
             {
+                if (Player == null)
+                {
+                    return null;
+                }
+
                 if (playerTransform == null && Player != null)
                 {
                     playerTransform = Player.transform;
-                    
                 }
 
                 return playerTransform;
             }
         }
 
-        public Vector3 PlayerPosition
+        public Vector3? PlayerPosition
         {
-            get => PlayerTransform.position;
-            set => PlayerTransform.position = value;
+            get
+            {
+                if (PlayerTransform == null)
+                {
+                    return null;
+                }
+                return PlayerTransform.position;
+            }
+            set
+            {
+                if (PlayerTransform != null)
+                {
+                    if (value.HasValue)
+                    {
+                        PlayerTransform.position = value.Value;
+                    }
+                }
+            }
         }
 
-        public Quaternion PlayerRotation
+        public Quaternion? PlayerRotation
         {
-            get => PlayerTransform.rotation;
-            set => PlayerTransform.rotation = value;
+            get
+            {
+                if (PlayerTransform == null)
+                {
+                    return null;
+                }
+                return PlayerTransform.rotation;
+            }
+            set
+            {
+                if (PlayerTransform != null)
+                {
+                    if (value.HasValue)
+                    {
+                        PlayerTransform.rotation = value.Value;
+                    }
+                }
+            }
         }
 
         public Camera MainCamera
