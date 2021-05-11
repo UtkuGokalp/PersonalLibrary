@@ -1,1 +1,2 @@
 -nowarn:CS0649
+-nullable:enable
