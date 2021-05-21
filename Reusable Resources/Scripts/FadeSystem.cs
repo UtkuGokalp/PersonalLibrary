@@ -18,14 +18,14 @@ namespace Utility.Development
 #nullable disable
         private Canvas canvas;
         private Image fadeImage;
-#nullable restore
+#nullable enable
         private bool Fading => fadeImage.gameObject.activeSelf;
         /// <summary>
         /// Current instance of the FadeSystem. If don't destroy on load is false, returns null.
         /// </summary>
 #nullable disable
         public static FadeSystem Instance { get; private set; }
-#nullable restore
+#nullable enable
         #endregion
 
         #region Awake
