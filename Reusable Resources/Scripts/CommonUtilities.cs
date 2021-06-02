@@ -115,9 +115,9 @@ namespace Utility.Development
         public const string PLAYER_TAG = "Player";
         public const string PLAYER_LAYER_NAME = "Player";
 
-        public Vector2 GetMousePosition2D()
+        public static Vector2 GetMousePosition2D(Camera relativeTo)
         {
-            return MainCamera.ScreenToWorldPoint(Input.mousePosition);
+            return relativeTo.ScreenToWorldPoint(Input.mousePosition);
         }
 
         /// <summary>
