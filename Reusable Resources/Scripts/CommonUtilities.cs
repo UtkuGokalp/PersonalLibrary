@@ -130,6 +130,17 @@ namespace Utility.Development
             return moveAmount;
         }
 
+        public static Vector2 GetCameraViewportSize(Camera camera)
+        {
+            //Camera.ortographicSize is camera's height / 2
+            //Camera.aspect is camera's width / camera's height
+            //When these two equations are reordered, the following calculations
+            //give us the camera viewport size.
+            float cameraViewportHeight = camera.orthographicSize * 2;
+            float cameraViewportWidth = camera.aspect * cameraViewportHeight;
+            return new Vector2(cameraViewportWidth, cameraViewportHeight);
+        }
+
         private CommonUtilities()
         {
         }
