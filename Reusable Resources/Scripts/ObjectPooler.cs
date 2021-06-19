@@ -12,6 +12,7 @@ namespace Utility.Development
         private T prefab;
         private Queue<T> pool;
         private List<T> objects;
+        private bool canGrow;
         public bool HasObjects => pool.Count != 0;
         private MonoBehaviourHelper? mbHelper;
         private MonoBehaviourHelper MB_Helper
@@ -34,9 +35,10 @@ namespace Utility.Development
         #endregion
 
         #region Constructor
-        public ObjectPooler(T prefab, int capacity)
+        public ObjectPooler(T prefab, int capacity, bool canGrow = true)
         {
             this.prefab = prefab;
+            this.canGrow = canGrow;
             objects = new List<T>();
             pool = new Queue<T>(capacity);
             AddPrefabsToPool(capacity);
@@ -45,14 +47,21 @@ namespace Utility.Development
 
         #region GetObject
         /// <summary>
-        /// Gets the next object in the pool and returns it after enabling it. If there are no items left in the pool, grabs the oldest one in the scene.
+        /// Gets the next object in the pool and returns it after enabling it. If there are no items left in the pool, grows the pool. If the pool cannot grow, grabs the oldest one in the scene.
         /// </summary>
         public T GetObject()
         {
             if (!HasObjects)
             {
-                PutObject(objects[0]);
-                objects.RemoveAt(0);
+                if (canGrow)
+                {
+                    AddPrefabsToPool(1);
+                }
+                else
+                {
+                    PutObject(objects[0]);
+                    objects.RemoveAt(0);
+                }
             }
             T obj = pool.Dequeue();
             obj.gameObject.SetActive(true);
@@ -97,6 +106,8 @@ namespace Utility.Development
         #region ObjectLifeControllerCoroutine
         private IEnumerator ObjectLifeControllerCoroutine(T item, float time)
         {
+            //We don't know what the time is going to be beforehand, it can be different values.
+            //So we cannot optimize this pressure on the GC by caching the WaitForSeconds object.
             yield return new WaitForSeconds(time);
             PutObject(item);
         }
