@@ -11,10 +11,9 @@ namespace Utility.Development
         public int X_Size { get; }
         public int Y_Size { get; }
         /// <summary>
-        /// Once this code gets ported to C# 9.0 or above, this property will go away and GetValue() method will have "return default" instead. Don't rely on the fact that you can modify this property.
+        /// The default value for every grid element.
         /// </summary>
-        //This is also the reason why we have a default! for initializing this property. Remove when updating the code to C# 9.0 or above.
-        public T DefaultValue { get; set; } = default!;
+        public T DefaultElementValue { get; set; }
         public event TypeSafeEventHandler<GridSystem<T>, OnGridElementChangedEventArgs>? OnGridElementChanged;
         #endregion
 
@@ -22,10 +21,11 @@ namespace Utility.Development
         /// <summary>
         /// Creates a grid with the specified size. Initializes the elements if an initialization method is provided.
         /// </summary>
-        public GridSystem(int xSize, int ySize, Func<T>? initializationMethod = null)
+        public GridSystem(int xSize, int ySize, /*TODO: Change this to T? instead of default! once Unity supports C# 9.0 or above.*/T defaultElementValue = default!, Func<T>? initializationMethod = null)
         {
             X_Size = xSize;
             Y_Size = ySize;
+            DefaultElementValue = defaultElementValue;
             grid = new T[X_Size, Y_Size];
 
             if (initializationMethod != null)
@@ -65,7 +65,7 @@ namespace Utility.Development
             {
                 return grid[x, y];
             }
-            return DefaultValue;
+            return DefaultElementValue;
         }
         #endregion
 
@@ -102,6 +102,19 @@ namespace Utility.Development
                     action.Invoke((x, y));
                 }
             }
+        }
+        #endregion
+
+        #region SetAllElementsToDefault
+        /// <summary>
+        /// Sets every grid element to the current default value.
+        /// </summary>
+        public void SetAllElementsToDefault()
+        {
+            Foreach(((int x, int y)) =>
+            {
+                grid[x, y] = DefaultElementValue;
+            });
         }
         #endregion
 
