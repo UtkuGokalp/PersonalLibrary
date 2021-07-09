@@ -111,9 +111,9 @@ namespace Utility.Development
         /// </summary>
         public void SetAllElementsToDefault()
         {
-            Foreach(((int x, int y)) =>
+            Foreach((index) =>
             {
-                grid[x, y] = DefaultElementValue;
+                grid[index.x, index.y] = DefaultElementValue;
             });
         }
         #endregion
