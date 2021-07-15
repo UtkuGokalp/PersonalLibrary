@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using UnityEngine;
 using UnityEngine.UI;
@@ -33,12 +33,13 @@ namespace Utility.Development
         {
             if (Instance == null)
             {
+                Instance = this;
+
                 canvas = CreateCanvas();
                 fadeImage = CreateFadeImage();
 
                 if (dontDestroyOnLoad)
                 {
-                    Instance = this;
                     DontDestroyOnLoad(gameObject);
                     DontDestroyOnLoad(canvas.gameObject);
                 }
@@ -122,6 +123,17 @@ namespace Utility.Development
             }
             fadeImage.color = fadeImage.color.With(null, null, null, 0);
             fadeImage.gameObject.SetActive(false);
+        }
+        #endregion
+
+        #region ResetBeforeStart
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        private static void ResetBeforeStart()
+        {
+            //This method is here because when domain reloading is disabled for faster enterance
+            //to play mode, static members of classes don't get reset.
+            //RuntimeInitializeLoadType.BeforeSceneLoad ensures that this method is called before Awake().
+            Instance = null;
         }
         #endregion
     }
