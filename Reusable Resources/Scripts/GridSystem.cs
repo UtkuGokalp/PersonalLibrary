@@ -47,6 +47,11 @@ namespace Utility.Development
             get => GetValue(xIndex, yIndex);
             set => SetValue(xIndex, yIndex, value);
         }
+        public T this[(int xIndex, int yIndex) index]
+        {
+            get => this[index.xIndex, index.yIndex];
+            set => this[index.xIndex, index.yIndex] = value;
+        }
         #endregion
 
         #region SetValue
