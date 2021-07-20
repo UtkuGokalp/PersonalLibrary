@@ -21,7 +21,7 @@ namespace Utility.Development
         /// <summary>
         /// Creates a grid with the specified size. Initializes the elements if an initialization method is provided.
         /// </summary>
-        public GridSystem(int xSize, int ySize, /*TODO: Change this to T? instead of default! once Unity supports C# 9.0 or above.*/T defaultElementValue = default!, Func<T>? initializationMethod = null)
+        public GridSystem(int xSize, int ySize, /*TODO: Change this to T? instead of default! once Unity supports C# 9.0 or above.*/T defaultElementValue = default!, Func<(int x, int y), T>? initializationMethod = null)
         {
             X_Size = xSize;
             Y_Size = ySize;
@@ -32,7 +32,7 @@ namespace Utility.Development
             {
                 Foreach((index) =>
                 {
-                    grid[index.x, index.y] = initializationMethod.Invoke();
+                    grid[index.x, index.y] = initializationMethod.Invoke((index.x, index.y));
                 });
             }
         }
