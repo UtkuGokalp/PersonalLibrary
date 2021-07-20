@@ -38,6 +38,17 @@ namespace Utility.Development
         }
         #endregion
 
+        #region Indexer
+        /// <summary>
+        /// Getter calls GetValue() method. Setter calls SetValue().
+        /// </summary>
+        public T this[int xIndex, int yIndex]
+        {
+            get => GetValue(xIndex, yIndex);
+            set => SetValue(xIndex, yIndex, value);
+        }
+        #endregion
+
         #region SetValue
         /// <summary>
         /// Sets the given index to the provided value. Returns true on success. Returns false otherwise.
