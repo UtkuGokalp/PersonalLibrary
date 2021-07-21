@@ -102,7 +102,7 @@ namespace Utility.Development
         /// <summary>
         /// Calls IndexIsValid(int, int) method. Removes the need to manually convert the tuple to two integers.
         /// </summary>
-        public bool IsIndexValue((int x, int y) index) => IndexIsValid(index.x, index.y);
+        public bool IndexIsValid((int x, int y) index) => IndexIsValid(index.x, index.y);
         #endregion
 
         #region Foreach
