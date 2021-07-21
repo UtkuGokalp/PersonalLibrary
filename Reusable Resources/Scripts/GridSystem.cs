@@ -42,15 +42,18 @@ namespace Utility.Development
         /// <summary>
         /// Getter calls GetValue() method. Setter calls SetValue().
         /// </summary>
-        public T this[int xIndex, int yIndex]
+        public T this[int x, int y]
         {
-            get => GetValue(xIndex, yIndex);
-            set => SetValue(xIndex, yIndex, value);
+            get => GetValue(x, y);
+            set => SetValue(x, y, value);
         }
-        public T this[(int xIndex, int yIndex) index]
+        /// <summary>
+        /// Calls this[int, int] indexer. Removes the need to manually convert the tuple to two integers.
+        /// </summary>
+        public T this[(int x, int y) index]
         {
-            get => this[index.xIndex, index.yIndex];
-            set => this[index.xIndex, index.yIndex] = value;
+            get => this[index.x, index.y];
+            set => this[index.x, index.y] = value;
         }
         #endregion
 
@@ -69,6 +72,11 @@ namespace Utility.Development
             }
             return false;
         }
+
+        /// <summary>
+        /// Calls SetValue(int, int, T) method. Removes the need to manually convert the tuple to two integers.
+        /// </summary>
+        public bool SetValue((int x, int y) index, T value) => SetValue(index.x, index.y, value);
         #endregion
 
         #region GetValue
@@ -83,6 +91,11 @@ namespace Utility.Development
             }
             return DefaultElementValue;
         }
+
+        /// <summary>
+        /// Calls GetValue(int, int) method. Removes the need to manually convert the tuple to two integers.
+        /// </summary>
+        public T GetValue((int x, int y) index) => GetValue(index.x, index.y);
         #endregion
 
         #region IndexIsValid
