@@ -109,6 +109,10 @@ namespace Utility.Development
         public static float GetAngle(this Vector3 direction) => GetAngle((Vector2)direction);
         #endregion
 
+        #region Normalize
+        public static float Normalize(this float value, float max, float min) => (value - min) / (max - min);
+        #endregion
+
         #region DirectionTo
         public static Vector2 DirectionTo(this Vector2 from, Vector2 to, bool normalized = true) => normalized ? (to - from).normalized : (to - from);
         public static Vector3 DirectionTo(this Vector3 from, Vector3 to, bool normalized = true) => normalized ? (to - from).normalized : (to - from);
