@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using UnityEngine;
 
@@ -31,6 +31,10 @@ namespace Utility.Development
                 if (player == null)
                 {
                     player = GameObject.FindGameObjectWithTag("Player");
+                    if (player == null)
+                    {
+                        Debug.LogWarning("No player was found. Check if you tagged the player with the \"Player\" tag.");
+                    }
                 }
 
                 return player;
