@@ -6,13 +6,13 @@ using System.Collections.Generic;
 
 namespace Utility.Inventory
 {
-    public class Inventory<TItemBase> : IEnumerable<TItemBase>
+    public class PooledInventory<TItemBase> : IEnumerable<TItemBase>
     {
         #region Variables
         private readonly List<TItemBase>[] inventory;
         private readonly IEqualityComparer<TItemBase> itemEqualityComparer;
-        public event TypeSafeEventHandler<Inventory<TItemBase>, OnItemAddedEventArgs>? OnItemAdded;
-        public event TypeSafeEventHandler<Inventory<TItemBase>, OnItemRemovedEventArgs>? OnItemRemoved;
+        public event TypeSafeEventHandler<PooledInventory<TItemBase>, OnItemAddedEventArgs>? OnItemAdded;
+        public event TypeSafeEventHandler<PooledInventory<TItemBase>, OnItemRemovedEventArgs>? OnItemRemoved;
         #endregion
 
         #region Constructor
@@ -20,7 +20,7 @@ namespace Utility.Inventory
         /// Creates a new inventory and initializes it with the given starting items where key is the item and value is the item count.
         /// </summary>
         /// <param name="startingItems">If length of startingItems array is bigger than inventorySize, only items that fit into the inventory are added to the inventory.</param>
-        public Inventory(int inventorySize, IEqualityComparer<TItemBase> itemEqualityComparer, params KeyValuePair<TItemBase, int>[] startingItems)
+        public PooledInventory(int inventorySize, IEqualityComparer<TItemBase> itemEqualityComparer, params KeyValuePair<TItemBase, int>[] startingItems)
         {
             this.itemEqualityComparer = itemEqualityComparer;
             inventory = new List<TItemBase>[inventorySize];
@@ -60,7 +60,7 @@ namespace Utility.Inventory
         public void AddItem(TItemBase item, int amount = 1)
         {
             int addedItemCount = 0;
-        startAddingItems:
+            startAddingItems:
             if (ContainsItem(item, out int index, out int _))
             {
                 for (int i = 0; i < amount; i++)
@@ -90,7 +90,7 @@ namespace Utility.Inventory
                 goto startAddingItems;
             }
             OnItemAdded?.Invoke(this, new OnItemAddedEventArgs(addedItemCount, index, item));
-        exitFunctionWithoutInvokingOnItemAddedEvent:;
+            exitFunctionWithoutInvokingOnItemAddedEvent:;
         }
         #endregion
 
@@ -233,7 +233,7 @@ namespace Utility.Inventory
         {
             for (int i = 0; i < inventory.Length; i++)
             {
-                if (inventory[i] != null)
+                if (inventory[i].Count != 0)
                 {
                     return true;
                 }
@@ -242,11 +242,11 @@ namespace Utility.Inventory
         }
         #endregion
 
-        #region GetTotalInventoryLength
+        #region GetInventorySize
         /// <summary>
-        /// Returns the total amount of items this inventory can hold (i.e. number of slots).
+        /// Returns the number of slots this inventory has.
         /// </summary>
-        public int GetTotalInventoryLength() => inventory.Length;
+        public int GetInventorySize() => inventory.Length;
         #endregion
 
         #region GetFirstAvailableSlotIndex
@@ -278,6 +278,9 @@ namespace Utility.Inventory
             {
                 if (inventory[i].Count > 0)
                 {
+                    //Returning first item will always work because when removing an item,
+                    //it is being removed from the end of the slot. So if the count is more than 0,
+                    //first item in the slot will always exist.
                     yield return inventory[i][0];
                 }
                 else
