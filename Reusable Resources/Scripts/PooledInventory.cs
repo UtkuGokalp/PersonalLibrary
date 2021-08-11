@@ -59,6 +59,11 @@ namespace Utility.Inventory
         /// </summary>
         public void AddItem(TItemBase item, int amount = 1)
         {
+            if (amount < 1)
+            {
+                //Don't add the item if at least one item isn't being added.
+                return;
+            }
             int addedItemCount = 0;
             startAddingItems:
             if (ContainsItem(item, out int index, out int _))
@@ -100,6 +105,11 @@ namespace Utility.Inventory
         /// </summary>
         public bool RemoveItem(TItemBase item, int amount = 1)
         {
+            if (amount < 1)
+            {
+                //Don't remove the item if at least one item isn't being removed.
+                return false;
+            }
             if (ContainsItem(item, out int index, out int _))
             {
                 //Reverse looping because removing items from the list also changes the index

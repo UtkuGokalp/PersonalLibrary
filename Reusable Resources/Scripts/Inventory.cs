@@ -29,7 +29,7 @@ namespace Utility.Inventory
             {
                 for (int i = 0; i < startingItems.Length; i++)
                 {
-                    inventory[i] = new InventoryItem(startingItems[i].Key, startingItems[i].Value);
+                    AddItem(startingItems[i].Key, startingItems[i].Value);
                 }
             }
             else
@@ -38,7 +38,7 @@ namespace Utility.Inventory
                 //Add only the ones the inventory can hold.
                 for (int i = 0; i < inventory.Length; i++)
                 {
-                    inventory[i] = new InventoryItem(startingItems[i].Key, startingItems[i].Value);
+                    AddItem(startingItems[i].Key, startingItems[i].Value);
                 }
             }
         }
@@ -73,6 +73,11 @@ namespace Utility.Inventory
         /// </summary>
         public void AddItem(TItemBase item, int amount = 1)
         {
+            if (amount < 1)
+            {
+                //Don't add if it isn't at least one item to add.
+                return;
+            }
             if (ContainsItem(item, out int index, out _))
             {
                 inventory[index]!.ItemCount += amount;
@@ -96,6 +101,11 @@ namespace Utility.Inventory
         /// </summary>
         public bool RemoveItem(TItemBase item, int amount = 1)
         {
+            if (amount < 1)
+            {
+                //Don't remove if it isn't at least one item to remove.
+                return false;
+            }
             if (ContainsItem(item, out int itemIndex, out int itemCount))
             {
                 if (inventory[itemIndex]!.ItemCount <= amount)
@@ -221,8 +231,8 @@ namespace Utility.Inventory
                 }
                 if (equalityComparer.Equals(inventory[i]!.Item, item))
                 {
-                    itemIndexInInventory = i;
                     itemCount = inventory[i]!.ItemCount;
+                    itemIndexInInventory = i;
                     return true;
                 }
             }
