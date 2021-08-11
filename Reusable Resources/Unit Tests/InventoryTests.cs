@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using NUnit.Framework;
 using Utility.Inventory;
@@ -52,6 +52,58 @@ namespace InventoryUpdate.Tests.InventoryTests
             int inventorySize = inventory.GetInventorySize();
 
             Assert.AreEqual(intendedSize, inventorySize);
+        }
+        #endregion
+
+        #region Inventory_DoesntAddStartingItems_StartingItemCountIsZero
+        [Test]
+        public void Inventory_DoesntAddStartingItems_StartingItemCountIsZero()
+        {
+            ItemBase item = new ItemBase("Item1");
+            KeyValuePair<ItemBase, int> startingItem = new KeyValuePair<ItemBase, int>(item, 0);
+
+            Inventory<ItemBase> inventory = new Inventory<ItemBase>(1, new ItemComparer(), startingItem);
+
+            Assert.IsFalse(inventory.ContainsItem(item, out _, out _));
+        }
+        #endregion
+
+        #region Inventory_DoesntAddStartingItems_StartingItemCountIsLessThanZero
+        [Test]
+        public void Inventory_DoesntAddStartingItems_StartingItemCountIsLessThanZero()
+        {
+            ItemBase item = new ItemBase("Item1");
+            KeyValuePair<ItemBase, int> startingItem = new KeyValuePair<ItemBase, int>(item, -1);
+
+            Inventory<ItemBase> inventory = new Inventory<ItemBase>(1, new ItemComparer(), startingItem);
+
+            Assert.IsFalse(inventory.ContainsItem(item, out _, out _));
+        }
+        #endregion
+
+        #region Inventory_AddItemDoesntAddItem_ItemAmountIsZero
+        [Test]
+        public void Inventory_AddItemDoesntAddItem_ItemAmountIsZero()
+        {
+            Inventory<ItemBase> inventory = new Inventory<ItemBase>(1, new ItemComparer());
+            ItemBase item = new ItemBase("Item1");
+
+            inventory.AddItem(item, 0);
+
+            Assert.IsFalse(inventory.ContainsItem(item, out _, out _));
+        }
+        #endregion
+
+        #region Inventory_AddItemDoesntAddItem_ItemAmountIsLessThanZero
+        [Test]
+        public void Inventory_AddItemDoesntAddItem_ItemAmountIsLessThanZero()
+        {
+            Inventory<ItemBase> inventory = new Inventory<ItemBase>(1, new ItemComparer());
+            ItemBase item = new ItemBase("Item1");
+
+            inventory.AddItem(item, -1);
+
+            Assert.IsFalse(inventory.ContainsItem(item, out _, out _));
         }
         #endregion
 
@@ -265,6 +317,62 @@ namespace InventoryUpdate.Tests.InventoryTests
             inventory.AddItem(itemToAdd);
 
             Assert.IsFalse(inventory.ContainsItem(itemToAdd, out _, out _));
+        }
+        #endregion
+
+        #region Inventory_RemoveItemDoesntRemoveItem_ItemAmountIsZero
+        [Test]
+        public void Inventory_RemoveItemDoesntRemoveItem_ItemAmountIsZero()
+        {
+            Inventory<ItemBase> inventory = new Inventory<ItemBase>(1, new ItemComparer());
+            ItemBase item = new ItemBase("Item1");
+
+            inventory.AddItem(item, 1);
+            inventory.RemoveItem(item, 0);
+
+            Assert.AreEqual(1, inventory.GetItemCount(item));
+        }
+        #endregion
+
+        #region Inventory_RemoveItemDoesntRemoveItem_ItemAmountIsLessThanZero
+        [Test]
+        public void Inventory_RemoveItemDoesntRemoveItem_ItemAmountIsLessThanZero()
+        {
+            Inventory<ItemBase> inventory = new Inventory<ItemBase>(1, new ItemComparer());
+            ItemBase item = new ItemBase("Item1");
+
+            inventory.AddItem(item, 1);
+            inventory.RemoveItem(item, -1);
+
+            Assert.AreEqual(1, inventory.GetItemCount(item));
+        }
+        #endregion
+
+        #region Inventory_RemoveItemReturnsFalse_ItemAmountIsZero
+        [Test]
+        public void Inventory_RemoveItemReturnsFalse_ItemAmountIsZero()
+        {
+            Inventory<ItemBase> inventory = new Inventory<ItemBase>(1, new ItemComparer());
+            ItemBase item = new ItemBase("Item1");
+
+            inventory.AddItem(item, 1);
+            bool returnValue = inventory.RemoveItem(item, 0);
+
+            Assert.IsFalse(returnValue);
+        }
+        #endregion
+
+        #region Inventory_RemoveItemReturnsFalse_ItemAmountIsLessThanZero
+        [Test]
+        public void Inventory_RemoveItemReturnsFalse_ItemAmountIsLessThanZero()
+        {
+            Inventory<ItemBase> inventory = new Inventory<ItemBase>(1, new ItemComparer());
+            ItemBase item = new ItemBase("Item1");
+
+            inventory.AddItem(item, 1);
+            bool returnValue = inventory.RemoveItem(item, -1);
+
+            Assert.IsFalse(returnValue);
         }
         #endregion
 

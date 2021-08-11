@@ -55,6 +55,58 @@ namespace InventoryUpdate.Tests.PooledInventoryTests
         }
         #endregion
 
+        #region PooledInventory_DoesntAddStartingItems_StartingItemCountIsZero
+        [Test]
+        public void PooledInventory_DoesntAddStartingItems_StartingItemCountIsZero()
+        {
+            ItemBase item = new ItemBase("Item1");
+            KeyValuePair<ItemBase, int> startingItem = new KeyValuePair<ItemBase, int>(item, 0);
+
+            PooledInventory<ItemBase> inventory = new PooledInventory<ItemBase>(1, new ItemComparer(), startingItem);
+
+            Assert.IsFalse(inventory.ContainsItem(item, out _, out _));
+        }
+        #endregion
+
+        #region PooledInventory_DoesntAddStartingItems_StartingItemCountIsLessThanZero
+        [Test]
+        public void PooledInventory_DoesntAddStartingItems_StartingItemCountIsLessThanZero()
+        {
+            ItemBase item = new ItemBase("Item1");
+            KeyValuePair<ItemBase, int> startingItem = new KeyValuePair<ItemBase, int>(item, -1);
+
+            PooledInventory<ItemBase> inventory = new PooledInventory<ItemBase>(1, new ItemComparer(), startingItem);
+
+            Assert.IsFalse(inventory.ContainsItem(item, out _, out _));
+        }
+        #endregion
+
+        #region PooledInventory_AddItemDoesntAddItem_ItemAmountIsZero
+        [Test]
+        public void PooledInventory_AddItemDoesntAddItem_ItemAmountIsZero()
+        {
+            PooledInventory<ItemBase> inventory = new PooledInventory<ItemBase>(1, new ItemComparer());
+            ItemBase item = new ItemBase("Item1");
+
+            inventory.AddItem(item, 0);
+
+            Assert.IsFalse(inventory.ContainsItem(item, out _, out _));
+        }
+        #endregion
+
+        #region PooledInventory_AddItemDoesntAddItem_ItemAmountIsLessThanZero
+        [Test]
+        public void PooledInventory_AddItemDoesntAddItem_ItemAmountIsLessThanZero()
+        {
+            PooledInventory<ItemBase> inventory = new PooledInventory<ItemBase>(1, new ItemComparer());
+            ItemBase item = new ItemBase("Item1");
+
+            inventory.AddItem(item, -1);
+
+            Assert.IsFalse(inventory.ContainsItem(item, out _, out _));
+        }
+        #endregion
+
         #region PooledInventory_AddsAllStartingItems_MoreSlotsThanStartingItemsCount
         [Test]
         public void PooledInventory_AddsAllStartingItems_MoreSlotsThanStartingItemsCount()
@@ -252,6 +304,62 @@ namespace InventoryUpdate.Tests.PooledInventoryTests
             inventory.AddItem(itemToAdd);
 
             Assert.IsFalse(inventory.ContainsItem(itemToAdd, out _, out _));
+        }
+        #endregion
+
+        #region PooledInventory_RemoveItemDoesntRemoveItem_ItemAmountIsZero
+        [Test]
+        public void PooledInventory_RemoveItemDoesntRemoveItem_ItemAmountIsZero()
+        {
+            PooledInventory<ItemBase> inventory = new PooledInventory<ItemBase>(1, new ItemComparer());
+            ItemBase item = new ItemBase("Item1");
+
+            inventory.AddItem(item, 1);
+            inventory.RemoveItem(item, 0);
+
+            Assert.AreEqual(1, inventory.GetItemCount(item));
+        }
+        #endregion
+
+        #region PooledInventory_RemoveItemDoesntRemoveItem_ItemAmountIsLessThanZero
+        [Test]
+        public void PooledInventory_RemoveItemDoesntRemoveItem_ItemAmountIsLessThanZero()
+        {
+            PooledInventory<ItemBase> inventory = new PooledInventory<ItemBase>(1, new ItemComparer());
+            ItemBase item = new ItemBase("Item1");
+
+            inventory.AddItem(item, 1);
+            inventory.RemoveItem(item, -1);
+
+            Assert.AreEqual(1, inventory.GetItemCount(item));
+        }
+        #endregion
+
+        #region PooledInventory_RemoveItemReturnsFalse_ItemAmountIsZero
+        [Test]
+        public void PooledInventory_RemoveItemReturnsFalse_ItemAmountIsZero()
+        {
+            PooledInventory<ItemBase> inventory = new PooledInventory<ItemBase>(1, new ItemComparer());
+            ItemBase item = new ItemBase("Item1");
+
+            inventory.AddItem(item, 1);
+            bool returnValue = inventory.RemoveItem(item, 0);
+
+            Assert.IsFalse(returnValue);
+        }
+        #endregion
+
+        #region PooledInventory_RemoveItemReturnsFalse_ItemAmountIsLessThanZero
+        [Test]
+        public void PooledInventory_RemoveItemReturnsFalse_ItemAmountIsLessThanZero()
+        {
+            PooledInventory<ItemBase> inventory = new PooledInventory<ItemBase>(1, new ItemComparer());
+            ItemBase item = new ItemBase("Item1");
+
+            inventory.AddItem(item, 1);
+            bool returnValue = inventory.RemoveItem(item, -1);
+
+            Assert.IsFalse(returnValue);
         }
         #endregion
 
