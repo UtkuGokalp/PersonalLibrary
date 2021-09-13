@@ -12,6 +12,7 @@ namespace Utility.Math
         /// </summary>
         public static Vector3 GetPoint(Vector3 start, Vector3 peak, Vector3 end, float t)
         {
+            t = Mathf.Clamp01(t);
             Vector3 start_peakLerp = Vector3.Lerp(start, peak, t);
             Vector3 peak_endLerp = Vector3.Lerp(peak, end, t);
             Vector3 bezierLerp = Vector3.Lerp(start_peakLerp, peak_endLerp, t);
@@ -23,6 +24,7 @@ namespace Utility.Math
         /// </summary>
         public static Vector3 GetPoint(Vector3 start, Vector3 peak1, Vector3 peak2, Vector3 end, float t)
         {
+            t = Mathf.Clamp01(t);
             Vector3 start_peak1Lerp = Vector3.Lerp(start, peak1, t);
             Vector3 peak1_peak2Lerp = Vector3.Lerp(peak1, peak2, t);
             Vector3 peak2_endLerp = Vector3.Lerp(peak2, end, t);
@@ -38,6 +40,12 @@ namespace Utility.Math
         /// </summary>
         public static Vector3 GetPoint(float t, params Vector3[] points)
         {
+            t = Mathf.Clamp01(t);
+            if (points.Length < 3)
+            {
+                throw new System.ArgumentException("Points must have at least 3 points.");
+            }
+
             List<Vector3> currentPoints = new List<Vector3>(points);
             List<Vector3> lerpedPoints = new List<Vector3>();
 
