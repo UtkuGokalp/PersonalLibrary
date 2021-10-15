@@ -119,6 +119,15 @@ namespace Utility.Development
         public const string PLAYER_TAG = "Player";
         public const string PLAYER_LAYER_NAME = "Player";
 
+        /// <summary>
+        /// Gets the mouse position in 2D relative to the main camera.
+        /// </summary>
+        /// <returns></returns>
+        public static Vector2 GetMousePosition2D()
+        {
+            return GetMousePosition2D(Instance.MainCamera);
+        }
+
         public static Vector2 GetMousePosition2D(Camera relativeTo)
         {
             return relativeTo.ScreenToWorldPoint(Input.mousePosition);
