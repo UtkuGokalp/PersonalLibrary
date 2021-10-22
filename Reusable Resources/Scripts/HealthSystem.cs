@@ -37,12 +37,13 @@ namespace Utility.Health
         {
             if (health != maxHealth)
             {
+                int previousHealth = health;
                 health += amount;
                 if (health > maxHealth)
                 {
                     health = maxHealth;
                 }
-                OnHealthChanged?.Invoke(this, new OnHealthChangedEventArgs(health, OnHealthChangedEventArgs.HealthChange.Increase));
+                OnHealthChanged?.Invoke(this, new OnHealthChangedEventArgs(health, previousHealth, OnHealthChangedEventArgs.HealthChange.Increase));
             }
         }
         #endregion
@@ -52,6 +53,7 @@ namespace Utility.Health
         {
             if (!Invincible && IsAlive)
             {
+                int previousHealth = health;
                 health -= amount;
                 if (health <= 0)
                 {
@@ -59,7 +61,7 @@ namespace Utility.Health
                     IsAlive = false;
                     OnDeath?.Invoke(this, System.EventArgs.Empty);
                 }
-                OnHealthChanged?.Invoke(this, new OnHealthChangedEventArgs(health, OnHealthChangedEventArgs.HealthChange.Decrease));
+                OnHealthChanged?.Invoke(this, new OnHealthChangedEventArgs(health, previousHealth, OnHealthChangedEventArgs.HealthChange.Decrease));
             }
         }
         #endregion
@@ -70,9 +72,10 @@ namespace Utility.Health
         /// </summary>
         public void KillSelf()
         {
+            int previousHealth = health;
             health = 0;
             IsAlive = false;
-            OnHealthChanged?.Invoke(this, new OnHealthChangedEventArgs(health, OnHealthChangedEventArgs.HealthChange.Decrease));
+            OnHealthChanged?.Invoke(this, new OnHealthChangedEventArgs(health, previousHealth, OnHealthChangedEventArgs.HealthChange.Decrease));
             OnDeath?.Invoke(this, System.EventArgs.Empty);
         }
         #endregion
@@ -103,14 +106,16 @@ namespace Utility.Health
     {
         #region Variables
         public enum HealthChange { None, Increase, Decrease }
-        public int HealthLeft { get; }
+        public int PreviousHealth { get; }
+        public int CurrentHealth { get; }
         public HealthChange HealthChangeData { get; }
         #endregion
 
         #region Constructor
-        public OnHealthChangedEventArgs(int healthLeft, HealthChange healthChangeData)
+        public OnHealthChangedEventArgs(int currentHealth, int previousHealth, HealthChange healthChangeData)
         {
-            HealthLeft = healthLeft;
+            CurrentHealth = currentHealth;
+            PreviousHealth = previousHealth;
             HealthChangeData = healthChangeData;
         }
         #endregion
