@@ -50,7 +50,7 @@ namespace Utility.Health
         #region DecreaseHealth
         public void DecreaseHealth(int amount)
         {
-            if (!Invincible)
+            if (!Invincible && IsAlive)
             {
                 health -= amount;
                 if (health <= 0)
@@ -59,10 +59,7 @@ namespace Utility.Health
                     IsAlive = false;
                     OnDeath?.Invoke(this, System.EventArgs.Empty);
                 }
-                else
-                {
-                    OnHealthChanged?.Invoke(this, new OnHealthChangedEventArgs(health, OnHealthChangedEventArgs.HealthChange.Decrease));
-                }
+                OnHealthChanged?.Invoke(this, new OnHealthChangedEventArgs(health, OnHealthChangedEventArgs.HealthChange.Decrease));
             }
         }
         #endregion
@@ -75,6 +72,7 @@ namespace Utility.Health
         {
             health = 0;
             IsAlive = false;
+            OnHealthChanged?.Invoke(this, new OnHealthChangedEventArgs(health, OnHealthChangedEventArgs.HealthChange.Decrease));
             OnDeath?.Invoke(this, System.EventArgs.Empty);
         }
         #endregion
