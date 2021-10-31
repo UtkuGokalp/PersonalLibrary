@@ -63,6 +63,19 @@ namespace Utility.Development
         }
         #endregion
 
+        #region Inverse
+        public static Color Inverse(this Color color, bool reverseAlpha = false)
+        {
+            return new Color()
+            {
+                .r = 1 - color.r,
+                .g = 1 - color.g,
+                .b = 1 - color.b,
+                .a = reverseAlpha ? 1 - color.a : color.a,
+            };
+        }
+        #endregion
+
         #region Add
         public static Vector2 Add(this Vector2 vector2, float x, float y) => vector2.With(vector2.x + x, vector2.y + y);
         public static Vector3 Add(this Vector3 vector3, float x, float y, float z) => vector3.With(vector3.x + x, vector3.y + y, vector3.z + z);
