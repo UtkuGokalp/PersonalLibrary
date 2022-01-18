@@ -20,13 +20,17 @@ namespace Utility.Development
         [Range(0f, 1f)]
         [SerializeField]
         private float backgroundAlpha = 0.5f;
-        [Range(0.1f, 1f)]
+        [Range(0f, 1f)]
         [SerializeField]
         private float backgroundScale = 0.8f;
         [SerializeField]
         private Sprite? backgroundSprite;
 
         [Header("Button Options")]
+        [SerializeField]
+        private Vector2 buttonScale = Vector2.one;
+        [SerializeField]
+        private Vector2 buttonTextScale = Vector2.one;
         [SerializeField]
         private Sprite? okButtonSprite;
         [SerializeField]
@@ -47,16 +51,20 @@ namespace Utility.Development
             disabledColor = Color.red
         };
 
-        [Header("Text Options")]
+        [Header("Dialogue Text Options")]
+        [SerializeField]
+        private string dialogueText = "Placeholder Text";
+        [SerializeField]
+        private Vector2 dialogueTextScale = Vector2.zero;
+
+        [Header("Common Text Options")]
         [SerializeField]
         private Color textColor = Color.black;
         [SerializeField]
         private float minFontSize = 20;
         [SerializeField]
         private float maxFontSize = 80;
-        [SerializeField]
-        private string dialogueText = "Placeholder Text";
-
+        
         public Vector2 CanvasResolution
         {
             get => canvasResolution;
@@ -79,6 +87,16 @@ namespace Utility.Development
             set => backgroundSprite = value;
         }
 
+        public Vector2 ButtonScale
+        {
+            get => buttonScale;
+            set => buttonScale = value;
+        }
+        public Vector2 ButtonTextScale
+        {
+            get => buttonTextScale;
+            set => buttonTextScale = value;
+        }
         public Sprite? OkButtonSprite
         {
             get => okButtonSprite;
@@ -105,6 +123,17 @@ namespace Utility.Development
             set => buttonColorBlock = value;
         }
 
+        public string DialogueText
+        {
+            get => dialogueText;
+            set => dialogueText = value;
+        }
+        public Vector2 DialogueTextScale
+        {
+            get => dialogueTextScale;
+            set => dialogueTextScale = value;
+        }
+
         public Color TextColor
         {
             get => textColor;
@@ -119,11 +148,6 @@ namespace Utility.Development
         {
             get => maxFontSize;
             set => maxFontSize = value;
-        }
-        public string DialogueText
-        {
-            get => dialogueText;
-            set => dialogueText = value;
         }
     }
     #endregion
@@ -150,7 +174,7 @@ namespace Utility.Development
             canvas = CreateCanvas();
             CreateEventSystem();
             CreateBackground();
-            CreateText(options.DialogueText);
+            CreateText(options.DialogueText, options.DialogueTextScale);
             CreateButton("OK Button", options.OkButtonText, options.OkButtonSprite, okAction);
             CreateButton("Cancel Button", options.CancelButtonText, options.OkButtonSprite, cancelAction);
             canvas.gameObject.SetActive(startActive);
@@ -206,14 +230,15 @@ namespace Utility.Development
             }
             #endregion
 
-            //TODO: Implement positioning and scaling text
+            //TODO: Implement positioning text
             #region CreateText
-            TextMeshProUGUI CreateText(string text)
+            TextMeshProUGUI CreateText(string text, Vector2 scale)
             {
                 GameObject textObject = new GameObject("TextMeshPro Text");
                 textObject.layer = GetUILayer();
                 textObject.transform.SetParent(canvas.transform);
                 textObject.transform.localPosition = Vector3.zero;
+                textObject.transform.localScale = scale;
 
                 TextMeshProUGUI textComponent = textObject.AddComponent<TextMeshProUGUI>();
                 textComponent.enableWordWrapping = true;
@@ -229,7 +254,7 @@ namespace Utility.Development
             }
             #endregion
 
-            //TODO: Implement positioning and scaling buttons
+            //TODO: Implement positioning buttons
             #region CreateButton
             Button CreateButton(string buttonName, string buttonText, Sprite? sprite, System.Action? onClickEvent)
             {
@@ -237,6 +262,7 @@ namespace Utility.Development
                 button.layer = GetUILayer();
                 button.transform.SetParent(canvas.transform);
                 button.transform.localPosition = Vector3.zero;
+                button.transform.localScale = options.ButtonScale;
 
                 Image imageComponent = button.AddComponent<Image>();
                 imageComponent.type = Image.Type.Sliced;
@@ -250,7 +276,7 @@ namespace Utility.Development
                 buttonComponent.navigation = n;
                 buttonComponent.onClick.AddListener(() => onClickEvent?.Invoke());
 
-                TextMeshProUGUI textComponent = CreateText(buttonText);
+                TextMeshProUGUI textComponent = CreateText(buttonText, options.ButtonTextScale);
                 textComponent.gameObject.transform.SetParent(button.transform);
                 textComponent.gameObject.transform.localPosition = Vector3.zero;
 
