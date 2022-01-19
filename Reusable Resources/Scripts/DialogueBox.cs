@@ -12,6 +12,52 @@ namespace Utility.Development
     [System.Serializable]
     public class DialogueBoxOptions
     {
+        #region Constructors
+        /// <summary>
+        /// Default parameterless public constructor.
+        /// </summary>
+        public DialogueBoxOptions() { }
+
+        /// <summary>
+        /// Creates a deep copy of the given options object.
+        /// </summary>
+        public DialogueBoxOptions(DialogueBoxOptions options)
+        {
+            canvasResolution = options.canvasResolution;
+            backgroundAlpha = options.backgroundAlpha;
+            backgroundScale = options.backgroundScale;
+            backgroundSprite = DeepCopySprite(options.backgroundSprite);
+
+            buttonScale = options.buttonScale;
+            buttonTextScale = options.buttonTextScale;
+            okButtonSprite = DeepCopySprite(options.okButtonSprite);
+            cancelButtonSprite = DeepCopySprite(options.cancelButtonSprite);
+            okButtonText = new string(options.okButtonText);
+            cancelButtonText = new string(options.cancelButtonText);
+            buttonColorBlock = options.buttonColorBlock;
+
+            dialogueText = new string(options.dialogueText);
+            dialogueTextScale = options.dialogueTextScale;
+
+            textColor = options.textColor;
+            minFontSize = options.minFontSize;
+            maxFontSize = options.maxFontSize;
+
+            #region DeepCopySprite
+            Sprite? DeepCopySprite(Sprite? s)
+            {
+                if (s == null)
+                {
+                    return null;
+                }
+                //Could not get extrude, mesh type and fallback physics shape generation values from sprite. The values used are the ones Unity uses as default values.
+                return Sprite.Create(s.texture, s.rect, s.pivot, s.pixelsPerUnit, 0, SpriteMeshType.Tight, s.border, false);
+            }
+            #endregion
+        }
+        #endregion
+
+        #region Fields
         [Header("Canvas Options")]
         [SerializeField]
         private Vector2 canvasResolution;
@@ -64,7 +110,9 @@ namespace Utility.Development
         private float minFontSize = 20;
         [SerializeField]
         private float maxFontSize = 80;
-        
+        #endregion
+
+        #region Properties
         public Vector2 CanvasResolution
         {
             get => canvasResolution;
@@ -74,12 +122,12 @@ namespace Utility.Development
         public float BackgroundAlpha
         {
             get => backgroundAlpha;
-            set => backgroundAlpha = value;
+            set => backgroundAlpha = Mathf.Clamp01(value);
         }
         public float BackgroundScale
         {
             get => backgroundScale;
-            set => backgroundScale = value;
+            set => backgroundScale = Mathf.Clamp01(value);
         }
         public Sprite? BackgroundSprite
         {
@@ -149,6 +197,7 @@ namespace Utility.Development
             get => maxFontSize;
             set => maxFontSize = value;
         }
+        #endregion
     }
     #endregion
 
@@ -170,7 +219,6 @@ namespace Utility.Development
         /// <param name="cancelAction">Code to execute when CANCEL button is pressed.</param>
         public DialogueBox(bool startActive, DialogueBoxOptions options, System.Action? okAction, System.Action? cancelAction)
         {
-            destroyed = false;
             canvas = CreateCanvas();
             CreateEventSystem();
             CreateBackground();
@@ -178,6 +226,7 @@ namespace Utility.Development
             CreateButton("OK Button", options.OkButtonText, options.OkButtonSprite, okAction);
             CreateButton("Cancel Button", options.CancelButtonText, options.OkButtonSprite, cancelAction);
             canvas.gameObject.SetActive(startActive);
+            destroyed = false;
 
             #region CreateCanvas
             Canvas CreateCanvas()
@@ -217,6 +266,7 @@ namespace Utility.Development
                 background.layer = GetUILayer();
                 background.transform.SetParent(canvas.transform);
                 background.transform.localPosition = Vector3.zero;
+
                 RectTransform rt = background.GetComponent<RectTransform>();
                 rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, canvas.pixelRect.width * options.BackgroundScale); //Set background width
                 rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, canvas.pixelRect.height * options.BackgroundScale); //Set background height
