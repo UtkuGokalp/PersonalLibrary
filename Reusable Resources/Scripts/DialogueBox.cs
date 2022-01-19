@@ -60,7 +60,7 @@ namespace Utility.Development
         #region Fields
         [Header("Canvas Options")]
         [SerializeField]
-        private Vector2 canvasResolution;
+        private Vector2 canvasResolution = new Vector2(1920, 1080);
 
         [Header("Background Options")]
         [Range(0f, 1f)]
@@ -73,6 +73,10 @@ namespace Utility.Development
         private Sprite? backgroundSprite;
 
         [Header("Button Options")]
+        [SerializeField, Vector2Range(0f, 1f, 0f, 1f)]
+        private Vector2 okButtonMinAnchor;
+        [SerializeField, Vector2Range(0f, 1f, 0f, 1f)]
+        private Vector2 okButtonMaxAnchor;
         [SerializeField]
         private Vector2 buttonScale = Vector2.one;
         [SerializeField]
@@ -101,7 +105,7 @@ namespace Utility.Development
         [SerializeField]
         private string dialogueText = "Placeholder Text";
         [SerializeField]
-        private Vector2 dialogueTextScale = Vector2.zero;
+        private Vector2 dialogueTextScale = Vector2.one;
 
         [Header("Common Text Options")]
         [SerializeField]
@@ -135,6 +139,16 @@ namespace Utility.Development
             set => backgroundSprite = value;
         }
 
+        public Vector2 OkButtonMinAnchor
+        {
+            get => okButtonMinAnchor;
+            set => okButtonMinAnchor = new Vector2(Mathf.Clamp01(value.x), Mathf.Clamp01(value.y));
+        }
+        public Vector2 OkButtonMaxAnchor
+        {
+            get => okButtonMaxAnchor;
+            set => okButtonMaxAnchor = new Vector2(Mathf.Clamp01(value.x), Mathf.Clamp01(value.y));
+        }
         public Vector2 ButtonScale
         {
             get => buttonScale;
@@ -221,10 +235,14 @@ namespace Utility.Development
         {
             canvas = CreateCanvas();
             CreateEventSystem();
-            CreateBackground();
+            GameObject background = CreateBackground();
             CreateText(options.DialogueText, options.DialogueTextScale);
-            CreateButton("OK Button", options.OkButtonText, options.OkButtonSprite, okAction);
-            CreateButton("Cancel Button", options.CancelButtonText, options.OkButtonSprite, cancelAction);
+
+            CreateButton("OK Button", options.OkButtonText, options.OkButtonMinAnchor, options.OkButtonMaxAnchor, options.OkButtonSprite, okAction);
+            Vector2 cancelButtonMinAnchor = new Vector2(1f - options.OkButtonMaxAnchor.x, options.OkButtonMinAnchor.y);
+            Vector2 cancelButtonMaxAnchor = new Vector2(1f - options.OkButtonMinAnchor.x, options.OkButtonMaxAnchor.y);
+            CreateButton("Cancel Button", options.CancelButtonText, cancelButtonMinAnchor, cancelButtonMaxAnchor, options.OkButtonSprite, cancelAction);
+
             canvas.gameObject.SetActive(startActive);
             destroyed = false;
 
@@ -280,13 +298,12 @@ namespace Utility.Development
             }
             #endregion
 
-            //TODO: Implement positioning text
             #region CreateText
             TextMeshProUGUI CreateText(string text, Vector2 scale)
             {
                 GameObject textObject = new GameObject("TextMeshPro Text");
                 textObject.layer = GetUILayer();
-                textObject.transform.SetParent(canvas.transform);
+                textObject.transform.SetParent(background.transform);
                 textObject.transform.localPosition = Vector3.zero;
                 textObject.transform.localScale = scale;
 
@@ -304,13 +321,12 @@ namespace Utility.Development
             }
             #endregion
 
-            //TODO: Implement positioning buttons
             #region CreateButton
-            Button CreateButton(string buttonName, string buttonText, Sprite? sprite, System.Action? onClickEvent)
+            Button CreateButton(string buttonName, string buttonText, Vector2 anchorMin, Vector2 anchorMax, Sprite? sprite, System.Action? onClickEvent)
             {
                 GameObject button = new GameObject(buttonName);
                 button.layer = GetUILayer();
-                button.transform.SetParent(canvas.transform);
+                button.transform.SetParent(background.transform);
                 button.transform.localPosition = Vector3.zero;
                 button.transform.localScale = options.ButtonScale;
 
@@ -325,6 +341,13 @@ namespace Utility.Development
                 n.mode = Navigation.Mode.None;
                 buttonComponent.navigation = n;
                 buttonComponent.onClick.AddListener(() => onClickEvent?.Invoke());
+
+                RectTransform buttonRt = buttonComponent.GetComponent<RectTransform>();
+                buttonRt.anchorMin = anchorMin;
+                buttonRt.anchorMax = anchorMax;
+                buttonRt.pivot = Vector2.zero;
+                buttonRt.offsetMin = Vector2.zero;
+                buttonRt.offsetMax = Vector2.zero;
 
                 TextMeshProUGUI textComponent = CreateText(buttonText, options.ButtonTextScale);
                 textComponent.gameObject.transform.SetParent(button.transform);
