@@ -66,9 +66,9 @@ namespace Utility.Development
         [Range(0f, 1f)]
         [SerializeField]
         private float backgroundAlpha = 0.5f;
-        [Range(0f, 1f)]
+        [Vector2Range(0f, 1f, 0f, 1f)]
         [SerializeField]
-        private float backgroundScale = 0.8f;
+        private Vector2 backgroundScale = Vector2.one * 0.8f;
         [SerializeField]
         private Sprite? backgroundSprite;
 
@@ -128,10 +128,10 @@ namespace Utility.Development
             get => backgroundAlpha;
             set => backgroundAlpha = Mathf.Clamp01(value);
         }
-        public float BackgroundScale
+        public Vector2 BackgroundScale
         {
             get => backgroundScale;
-            set => backgroundScale = Mathf.Clamp01(value);
+            set => backgroundScale = new Vector2(Mathf.Clamp01(value.x), Mathf.Clamp01(value.y));
         }
         public Sprite? BackgroundSprite
         {
@@ -286,8 +286,8 @@ namespace Utility.Development
                 background.transform.localPosition = Vector3.zero;
 
                 RectTransform rt = background.GetComponent<RectTransform>();
-                rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, canvas.pixelRect.width * options.BackgroundScale); //Set background width
-                rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, canvas.pixelRect.height * options.BackgroundScale); //Set background height
+                rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, canvas.pixelRect.width * options.BackgroundScale.x); //Set background width
+                rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, canvas.pixelRect.height * options.BackgroundScale.y); //Set background height
 
                 Image imageComponent = background.GetComponent<Image>();
                 imageComponent.type = Image.Type.Sliced;
