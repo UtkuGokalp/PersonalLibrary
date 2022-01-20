@@ -221,6 +221,7 @@ namespace Utility.Development
         #region Variables
         private Canvas canvas;
         private bool destroyed;
+        private bool active;
         #endregion
 
         #region Constructor
@@ -244,6 +245,7 @@ namespace Utility.Development
             CreateButton("Cancel Button", options.CancelButtonText, cancelButtonMinAnchor, cancelButtonMaxAnchor, options.OkButtonSprite, cancelAction);
 
             canvas.gameObject.SetActive(startActive);
+            active = startActive;
             destroyed = false;
 
             #region CreateCanvas
@@ -392,6 +394,27 @@ namespace Utility.Development
             if (!destroyed)
             {
                 canvas.gameObject.SetActive(false);
+            }
+        }
+        #endregion
+
+        #region Toggle
+        /// <summary>
+        /// Shows the dialogue box if hidden. Hides it if shown.
+        /// </summary>
+        public void Toggle()
+        {
+            if (!destroyed)
+            {
+                if (active)
+                {
+                    Hide();
+                }
+                else
+                {
+                    Show();
+                }
+                active = !active;
             }
         }
         #endregion
