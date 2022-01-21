@@ -23,25 +23,27 @@ namespace Utility.Development
         /// </summary>
         public DialogueBoxOptions(DialogueBoxOptions options)
         {
-            canvasResolution = options.canvasResolution;
-            backgroundAlpha = options.backgroundAlpha;
-            backgroundScale = options.backgroundScale;
-            backgroundSprite = DeepCopySprite(options.backgroundSprite);
+            canvasResolution = options.CanvasResolution;
+            backgroundAlpha = options.BackgroundAlpha;
+            backgroundScale = options.BackgroundScale;
+            backgroundSprite = DeepCopySprite(options.BackgroundSprite);
 
-            buttonScale = options.buttonScale;
-            buttonTextScale = options.buttonTextScale;
-            okButtonSprite = DeepCopySprite(options.okButtonSprite);
-            cancelButtonSprite = DeepCopySprite(options.cancelButtonSprite);
-            okButtonText = new string(options.okButtonText);
-            cancelButtonText = new string(options.cancelButtonText);
-            buttonColorBlock = options.buttonColorBlock;
+            okButtonMinAnchor = options.OkButtonMinAnchor;
+            okButtonMaxAnchor = options.OkButtonMaxAnchor;
+            buttonScale = options.ButtonScale;
+            buttonTextScale = options.ButtonTextScale;
+            okButtonSprite = DeepCopySprite(options.OkButtonSprite);
+            cancelButtonSprite = DeepCopySprite(options.CancelButtonSprite);
+            okButtonText = new string(options.OkButtonText);
+            cancelButtonText = new string(options.CancelButtonText);
+            buttonColorBlock = options.ButtonColorBlock;
 
-            dialogueText = new string(options.dialogueText);
-            dialogueTextScale = options.dialogueTextScale;
+            dialogueText = new string(options.DialogueText);
+            dialogueTextScale = options.DialogueTextScale;
 
-            textColor = options.textColor;
-            minFontSize = options.minFontSize;
-            maxFontSize = options.maxFontSize;
+            textColor = options.TextColor;
+            minFontSize = options.MinFontSize;
+            maxFontSize = options.MaxFontSize;
 
             #region DeepCopySprite
             Sprite? DeepCopySprite(Sprite? s)
