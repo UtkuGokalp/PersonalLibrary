@@ -234,7 +234,8 @@ namespace Utility.Development
         /// <param name="options">Options for the dialogue box.</param>
         /// <param name="okAction">Code to execute when OK button is pressed.</param>
         /// <param name="cancelAction">Code to execute when CANCEL button is pressed.</param>
-        public DialogueBox(bool startActive, DialogueBoxOptions options, System.Action? okAction, System.Action? cancelAction)
+        /// <param name="autoSelfDestroy">If the dialogue box object should destroy itself after one of the buttons are pressed.</param>
+        public DialogueBox(bool startActive, bool autoSelfDestroy, DialogueBoxOptions options, System.Action? okAction, System.Action? cancelAction)
         {
             canvas = CreateCanvas();
             CreateEventSystem();
@@ -344,7 +345,14 @@ namespace Utility.Development
                 Navigation n = buttonComponent.navigation;
                 n.mode = Navigation.Mode.None;
                 buttonComponent.navigation = n;
-                buttonComponent.onClick.AddListener(() => onClickEvent?.Invoke());
+                buttonComponent.onClick.AddListener(() =>
+                {
+                    onClickEvent?.Invoke();
+                    if (autoSelfDestroy)
+                    {
+                        Destroy();
+                    }
+                });
 
                 RectTransform buttonRt = buttonComponent.GetComponent<RectTransform>();
                 buttonRt.anchorMin = anchorMin;
