@@ -4,35 +4,44 @@ using System;
 using UnityEngine;
 using System.Reflection;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using Object = UnityEngine.Object;
 
 namespace Utility.Development
 {
     [AttributeUsage(AttributeTargets.Field)]
     public class FetchAttribute : Attribute
     {
+        #region SearchType
+        public enum SearchType
+        {
+            GameObject,
+            Children,
+            World
+        }
+        #endregion
+        
         #region Variables
-        private bool searchInChildren;
+        private SearchType searchType;
         #endregion
 
         #region Constructor
-        public FetchAttribute(bool searchInChildren = false)
+        public FetchAttribute(SearchType searchType = SearchType.GameObject)
         {
-            this.searchInChildren = searchInChildren;
+            this.searchType = searchType;
         }
         #endregion
 
         #region Fetch
         private void Fetch<T>(T instance, FieldInfo field) where T : Component
         {
-            Component component;
-            if (searchInChildren)
+            Component component = searchType switch
             {
-                component = instance.gameObject.GetComponentInChildren(field.FieldType);
-            }
-            else
-            {
-                component = instance.gameObject.GetComponent(field.FieldType);
-            }
+                SearchType.GameObject => instance.gameObject.GetComponent(field.FieldType),
+                SearchType.Children => instance.gameObject.GetComponentInChildren(field.FieldType),
+                SearchType.World => Object.FindObjectOfType(field.FieldType).GetComponent(field.FieldType),
+                _ => throw new ArgumentOutOfRangeException()
+            };
             field.SetValue(instance, component);
         }
         #endregion
