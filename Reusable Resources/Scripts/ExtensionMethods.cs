@@ -246,6 +246,35 @@ namespace Utility.Development
         }
         #endregion
 
+        #region ChangeState
+        /// <summary>
+        /// Changes the state of the animator to the state in layer 0 with the given name. Returns false if the state wasn't changed.
+        /// </summary>
+        public static bool ChangeState(this Animator animator, string stateName = "")
+        {
+            bool sameStatePlaying = animator.GetCurrentAnimatorStateInfo(0).IsName(stateName);
+            if (!sameStatePlaying)
+            {
+                animator.Play(stateName);
+                return true;
+            }
+            return false;
+        }
+        
+        /// <summary>
+        /// Changes the state of the animator to the given clip if the clip exists in the layer 0. Returns false if the state wasn't changed.
+        /// </summary>
+        public static bool ChangeState(this Animator animator, AnimationClip? clip)
+        {
+            if (clip == null)
+            {
+                Debug.LogWarning("Clip was null.");
+                return false;
+            }
+            return animator.ChangeState(clip.name);
+        }
+        #endregion
+
         #region FadeIn
         public static void FadeIn(this AudioSource audioSource, float fadeTime, float lastVolume = 1, System.Action? afterFadingFinished = null)
         {
