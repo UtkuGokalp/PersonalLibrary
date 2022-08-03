@@ -7,13 +7,13 @@ namespace Utility.Development
     public class GridSystem<T>
     {
         #region Variables
-        private readonly T[,] grid;
+        private readonly T?[,] grid;
         public int X_Size { get; }
         public int Y_Size { get; }
         /// <summary>
         /// The default value for every grid element.
         /// </summary>
-        public T DefaultElementValue { get; set; }
+        public T? DefaultElementValue { get; set; }
         public event TypeSafeEventHandler<GridSystem<T>, OnGridElementChangedEventArgs>? OnGridElementChanged;
         #endregion
 
@@ -21,7 +21,7 @@ namespace Utility.Development
         /// <summary>
         /// Creates a grid with the specified size. Initializes the elements if an initialization method is provided.
         /// </summary>
-        public GridSystem(int xSize, int ySize, /*TODO: Change this to T? instead of default! once Unity supports C# 9.0 or above.*/T defaultElementValue = default!, Func<(int x, int y), T>? initializationMethod = null)
+        public GridSystem(int xSize, int ySize, T? defaultElementValue, Func<(int x, int y), T>? initializationMethod = null)
         {
             X_Size = xSize;
             Y_Size = ySize;
@@ -42,7 +42,7 @@ namespace Utility.Development
         /// <summary>
         /// Getter calls GetValue() method. Setter calls SetValue().
         /// </summary>
-        public T this[int x, int y]
+        public T? this[int x, int y]
         {
             get => GetValue(x, y);
             set => SetValue(x, y, value);
@@ -50,7 +50,7 @@ namespace Utility.Development
         /// <summary>
         /// Calls this[int, int] indexer. Removes the need to manually convert the tuple to two integers.
         /// </summary>
-        public T this[(int x, int y) index]
+        public T? this[(int x, int y) index]
         {
             get => this[index.x, index.y];
             set => this[index.x, index.y] = value;
@@ -61,11 +61,11 @@ namespace Utility.Development
         /// <summary>
         /// Sets the given index to the provided value. Returns true on success. Returns false otherwise.
         /// </summary>
-        public bool SetValue(int x, int y, T value)
+        public bool SetValue(int x, int y, T? value)
         {
             if (IndexIsValid(x, y))
             {
-                T oldValue = GetValue(x, y);
+                T? oldValue = GetValue(x, y);
                 grid[x, y] = value;
                 OnGridElementChanged?.Invoke(this, new OnGridElementChangedEventArgs(oldValue, GetValue(x, y)));
                 return true;
@@ -83,7 +83,7 @@ namespace Utility.Development
         /// <summary>
         /// Returns the value in the given address. Returns the default value if address is invalid.
         /// </summary>
-        public T GetValue(int x, int y)
+        public T? GetValue(int x, int y)
         {
             if (IndexIsValid(x, y))
             {
@@ -95,7 +95,7 @@ namespace Utility.Development
         /// <summary>
         /// Calls GetValue(int, int) method. Removes the need to manually convert the tuple to two integers.
         /// </summary>
-        public T GetValue((int x, int y) index) => GetValue(index.x, index.y);
+        public T? GetValue((int x, int y) index) => GetValue(index.x, index.y);
         #endregion
 
         #region IndexIsValid
@@ -156,12 +156,12 @@ namespace Utility.Development
         public class OnGridElementChangedEventArgs : EventArgs
         {
             #region Variables
-            public T OldElement { get; }
-            public T NewElement { get; }
+            public T? OldElement { get; }
+            public T? NewElement { get; }
             #endregion
 
             #region Constructor
-            public OnGridElementChangedEventArgs(T oldElement, T newElement)
+            public OnGridElementChangedEventArgs(T? oldElement, T? newElement)
             {
                 OldElement = oldElement;
                 NewElement = newElement;
