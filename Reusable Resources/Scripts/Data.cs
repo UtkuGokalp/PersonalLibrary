@@ -12,18 +12,28 @@ namespace Utility.Development
         #endregion
 
         #region Constructor
-		static Data()
-		{
-			binaryFormatter = new BinaryFormatter();
-		}
-		#endregion
+        static Data()
+        {
+            binaryFormatter = new BinaryFormatter();
+        }
+        #endregion
 
         #region Save
         /// <summary>
-        /// Saves the object in binary format. Creates the file if it doesn't exist.
+        /// Saves the object in binary format. Creates the file and directory if necessary. Returns true if saving was successful. Returns false otherwise.
         /// </summary>
-        public static void Save(string path, object data, bool overwrite = true)
+        public static bool Save(string path, object data, bool overwrite = true)
         {
+            string? directoryPath = Path.GetDirectoryName(path);
+            if (directoryPath == null)
+            {
+                return false;
+            }
+
+            if (!Directory.Exists(directoryPath))
+            {
+                Directory.CreateDirectory(directoryPath);
+            }
             if (!File.Exists(path))
             {
                 File.Create(path).Dispose();
@@ -31,6 +41,7 @@ namespace Utility.Development
 
             using FileStream stream = File.Open(path, overwrite ? FileMode.Open : FileMode.Append);
             binaryFormatter.Serialize(stream, data);
+            return true;
         }
         #endregion
 
@@ -40,15 +51,18 @@ namespace Utility.Development
         /// </summary>
         public static T Load<T>(string path)
         {
+            string? directoryPath = Path.GetDirectoryName(path);
+            if (directoryPath == null || !Directory.Exists(directoryPath))
+            {
+                throw new DirectoryNotFoundException();
+            }
             if (!File.Exists(path))
             {
                 throw new FileNotFoundException();
             }
 
-            T data;
-            
             using FileStream stream = new FileStream(path, FileMode.Open);
-            data = (T)binaryFormatter.Deserialize(stream);
+            T data = (T)binaryFormatter.Deserialize(stream);
 
             return data;
         }
