@@ -1,8 +1,6 @@
 #nullable enable
 
-using Utility.Development;
-
-namespace DevsThatJam
+namespace Utility.Development
 {
     public class Timer
     {
