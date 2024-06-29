@@ -56,7 +56,14 @@ namespace Utility.Development
         #region Reset
         public void Reset()
         {
-            currentTime = 0f;
+            if (increasing)
+            {
+                currentTime = 0f;
+            }
+            else
+            {
+                currentTime = targetTime;
+            }
         }
         #endregion
     }
